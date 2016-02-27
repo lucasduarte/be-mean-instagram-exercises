@@ -112,6 +112,199 @@ activity = {
 ```
 
 ## Create - cadastro
+1. Cadastre 10 usuários diferentes
+```
+be-mean> db.users.insert(user)
+be-mean> db.users.find(user)
+{
+  "_id": ObjectId("56d1046d4372c4bb17034bb6"),
+  "name": "Lucas Duarte Anicio",
+  "bio": "Test bio",
+  "date-register": 1456538718563,
+  "avatar-path": "avatar.png",
+  "background-path": "bg.png",
+  "auth": {
+    "username": "lucas",
+    "password": "secret",
+    "last-access": 1456538718563,
+    "online": true,
+    "disabled": false,
+    "hash-token": "ancfdsif"
+  }
+}
+
+be-mean> db.users.insert(user)
+be-mean> db.users.find(user)
+{
+  "_id": ObjectId("56d1052d3c0da5159bc579b4"),
+  "name": "Dilma Presidenta",
+  "bio": "Toma",
+  "date-register": 1456538920685,
+  "avatar-path": "avatar.png",
+  "background-path": "bg.png",
+  "auth": {
+    "username": "dilmae",
+    "password": "secret",
+    "last-access": 1456538920685,
+    "online": true,
+    "disabled": false,
+    "hash-token": "ladra"
+  }
+}
+
+be-mean> db.users.insert(user)
+be-mean> db.users.find(user)
+{
+  "_id": ObjectId("56d105933c0da5159bc579b5"),
+  "name": "Chico Cunha",
+  "bio": "Mosquito desgraçado",
+  "date-register": 1456539012495,
+  "avatar-path": "avatar.png",
+  "background-path": "bg.png",
+  "auth": {
+    "username": "chicao",
+    "password": "secret",
+    "last-access": 1456539012495,
+    "online": true,
+    "disabled": false,
+    "hash-token": "ladrao"
+  }
+}
+
+be-mean> db.users.insert(user)
+be-mean> db.users.find(user)
+{
+  "_id": ObjectId("56d106133c0da5159bc579b6"),
+  "name": "Lula Alma Honesta",
+  "bio": "Eu não sei de nada",
+  "date-register": 1456539095520,
+  "avatar-path": "avatar.png",
+  "background-path": "bg.png",
+  "auth": {
+    "username": "tentaculo",
+    "password": "secret",
+    "last-access": 1456539095520,
+    "online": true,
+    "disabled": false,
+    "hash-token": "chulispa"
+  }
+}
+
+be-mean> db.users.insert(user)
+be-mean> db.users.find(user)
+{
+  "_id": ObjectId("56d1068b3c0da5159bc579b7"),
+  "name": "Vera Verão",
+  "bio": "Tchola",
+  "date-register": 1456539272596,
+  "avatar-path": "avatar.png",
+  "background-path": "bg.png",
+  "auth": {
+    "username": "verao",
+    "password": "secret",
+    "last-access": 1456539272596,
+    "online": true,
+    "disabled": false,
+    "hash-token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
+  }
+}
+
+be-mean> db.users.insert(user)
+be-mean> db.users.find(user)
+{
+  "_id": ObjectId("56d106e43c0da5159bc579b8"),
+  "name": "Padre do Balão",
+  "bio": "Que loucura cara",
+  "date-register": 1456539362214,
+  "avatar-path": "avatar.png",
+  "background-path": "bg.png",
+  "auth": {
+    "username": "balao",
+    "password": "secret",
+    "last-access": 1456539362214,
+    "online": true,
+    "disabled": false,
+    "hash-token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
+  }
+}
+
+be-mean> db.users.insert(user)
+be-mean> db.users.find(user)
+{
+  "_id": ObjectId("56d107093c0da5159bc579b9"),
+  "name": "Caetano Veloso",
+  "bio": "Como você é burro cara",
+  "date-register": 1456539399117,
+  "avatar-path": "avatar.png",
+  "background-path": "bg.png",
+  "auth": {
+    "username": "burro",
+    "password": "secret",
+    "last-access": 1456539399117,
+    "online": true,
+    "disabled": false,
+    "hash-token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
+  }
+}
+
+be-mean> db.users.insert(user)
+be-mean> db.users.find(user)
+{
+  "_id": ObjectId("56d1073e3c0da5159bc579ba"),
+  "name": "David Brasil",
+  "bio": "nada",
+  "date-register": 1456539451588,
+  "avatar-path": "avatar.png",
+  "background-path": "bg.png",
+  "auth": {
+    "username": "brasil",
+    "password": "secret",
+    "last-access": 1456539451588,
+    "online": true,
+    "disabled": false,
+    "hash-token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
+  }
+}
+
+be-mean> db.users.insert(user)
+be-mean> db.users.find(user)
+{
+  "_id": ObjectId("56d108053c0da5159bc579bb"),
+  "name": "Chico Bioca",
+  "bio": "E tudo maix",
+  "date-register": 1456539650623,
+  "avatar-path": "avatar.png",
+  "background-path": "bg.png",
+  "auth": {
+    "username": "chicao",
+    "password": "secret",
+    "last-access": 1456539650623,
+    "online": true,
+    "disabled": false,
+    "hash-token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
+  }
+}
+
+be-mean> db.users.insert(user)
+be-mean> db.users.find(user)
+{
+  "_id": ObjectId("56d1088d3c0da5159bc579bc"),
+  "name": "Jailson Pai de Familia",
+  "bio": "Que delícia cara",
+  "date-register": 1456539770040,
+  "avatar-path": "avatar.png",
+  "background-path": "bg.png",
+  "auth": {
+    "username": "ursao",
+    "password": "secret",
+    "last-access": 1456539770040,
+    "online": true,
+    "disabled": false,
+    "hash-token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
+  }
+}
+
+```
 
 ## Retrieve - busca
 
