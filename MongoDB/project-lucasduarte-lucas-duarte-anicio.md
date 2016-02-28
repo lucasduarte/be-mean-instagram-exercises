@@ -303,7 +303,34 @@ be-mean> db.users.find(user)
     "hash-token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
   }
 }
-
+```
+2. Cadastre 5 projetos diferentes
+```
+projeto = {
+	"name": "Fora Dilma",
+	"description": "Tirar a presidente do poder",
+	"date-begin": Date.now(),
+	"date-dream": Date.now() + 10,
+	"date-end": Date.now() + 20,
+	"visible": true,
+	"realocate": false,
+	"expired": Date.now() + 50,
+	"visualizable_mod": "Teste",
+	"tags": ["importante", "dilma", "presidente"]
+	"members": [],
+	"goals": [
+		{
+			"name": "Protesto",
+			"description": "Protestar na praça",
+			"date_begin": Date.now(),
+			"date_dream": Date.now() + 10,
+			"date_end": Date.now() + 20,
+			"realocate": false
+			"expired": Date.now() + 50,
+			"tags":["fora", "dilma", "pt"]
+		}
+	
+}
 ```
 
 ## Retrieve - busca
