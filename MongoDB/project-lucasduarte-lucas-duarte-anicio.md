@@ -306,7 +306,89 @@ be-mean> db.users.find(user)
 ```
 2. Cadastre 5 projetos diferentes
 ```
-projeto = {
+var users = db.users.find()
+
+activity1 = {
+	"name": "Activity1",
+	"description": "Example description",
+	"date-begin": Date.now(),
+	"date-dream": Date.now() + 10,
+	"date-end": Date.now() + 20,
+	"realocate": false,
+	"expired": Date.now() + 50,
+	"members": [
+		{
+			"user_id": users[0]._id,
+			"notify": true,
+			"type-name": "type"	
+		}
+	],
+	"historic": [],
+	"comments": [],
+	"tags": []
+}
+
+{
+  "name": "Activity1",
+  "description": "Example description",
+  "date-begin": 1456787696496,
+  "date-dream": 1456787696506,
+  "date-end": 1456787696516,
+  "realocate": false,
+  "expired": 1456787696546,
+  "members": [
+    {
+      "user_id": ObjectId("56d1046d4372c4bb17034bb6"),
+      "notify": true,
+      "type-name": "type"
+    }
+  ],
+  "historic": [ ],
+  "comments": [ ],
+  "tags": [ ]
+}
+
+activity2 = {
+	"name": "Activity2",
+	"description": "Example description",
+	"date-begin": Date.now(),
+	"date-dream": Date.now() + 10,
+	"date-end": Date.now() + 20,
+	"realocate": false,
+	"expired": Date.now() + 50,
+	"members": [
+		{
+			"user_id": users[1]._id,
+			"notify": true,
+			"type-name": "type"	
+		}
+	],
+	"historic": [],
+	"comments": [],
+	"tags": []
+}
+
+{
+  "name": "Activity2",
+  "description": "Example description",
+  "date-begin": 1456787910131,
+  "date-dream": 1456787910141,
+  "date-end": 1456787910151,
+  "realocate": false,
+  "expired": 1456787910181,
+  "members": [
+    {
+      "user_id": ObjectId("56d1052d3c0da5159bc579b4"),
+      "notify": true,
+      "type-name": "type"
+    }
+  ],
+  "historic": [ ],
+  "comments": [ ],
+  "tags": [ ]
+}
+
+projeto1 = {
 	"name": "Fora Dilma",
 	"description": "Tirar a presidente do poder",
 	"date-begin": Date.now(),
@@ -328,9 +410,138 @@ projeto = {
 			"realocate": false
 			"expired": Date.now() + 50,
 			"tags":["fora", "dilma", "pt"]
+			"activities": [
+				{ "activity_id": activities[0]._id },
+				{ "activity_id": activities[1]._id }]		
 		}
-	
+	],
+	"historic": []	
 }
+
+projeto2 = {
+	"name": "Project2",
+	"description": "Project Description",
+	"date-begin": Date.now(),
+	"date-dream": Date.now() + 10,
+	"date-end": Date.now() + 20,
+	"visible": true,
+	"realocate": false,
+	"expired": Date.now() + 50,
+	"visualizable_mod": "Teste",
+	"tags": ["importante", "saifora", "presidente"]
+	"members": [],
+	"goals": [
+		{
+			"name": "Protesto",
+			"description": "Protestar na praça",
+			"date_begin": Date.now(),
+			"date_dream": Date.now() + 10,
+			"date_end": Date.now() + 20,
+			"realocate": false
+			"expired": Date.now() + 50,
+			"tags":["fora", "dilma", "pt"]
+			"activities": [
+				{ "activity_id": activities[0]._id },
+				{ "activity_id": activities[1]._id }
+			]			
+		}
+	],
+	"historic": []	
+}
+
+projeto3 = {
+	"name": "Project3",
+	"description": "Project Description",
+	"date-begin": Date.now(),
+	"date-dream": Date.now() + 10,
+	"date-end": Date.now() + 20,
+	"visible": true,
+	"realocate": false,
+	"expired": Date.now() + 50,
+	"visualizable_mod": "Teste",
+	"tags": ["importante", "somedaqui", "nothing"]
+	"members": [],
+	"goals": [
+		{
+			"name": "Protesto",
+			"description": "Protestar na praça",
+			"date_begin": Date.now(),
+			"date_dream": Date.now() + 10,
+			"date_end": Date.now() + 20,
+			"realocate": false
+			"expired": Date.now() + 50,
+			"tags":["fora", "dilma", "pt"]
+			"activities": [
+				{ "activity_id": activities[0]._id },
+				{ "activity_id": activities[1]._id }
+			]			
+		}
+	],
+	"historic": []	
+}
+
+projeto4 = {
+	"name": "Project4",
+	"description": "Project Description",
+	"date-begin": Date.now(),
+	"date-dream": Date.now() + 10,
+	"date-end": Date.now() + 20,
+	"visible": true,
+	"realocate": false,
+	"expired": Date.now() + 50,
+	"visualizable_mod": "Teste",
+	"tags": ["tag1", "tag2", "tag3"]
+	"members": [],
+	"goals": [
+		{
+			"name": "Protesto",
+			"description": "Protestar na praça",
+			"date_begin": Date.now(),
+			"date_dream": Date.now() + 10,
+			"date_end": Date.now() + 20,
+			"realocate": false
+			"expired": Date.now() + 50,
+			"tags":["fora", "dilma", "pt"]
+			"activities": [
+				{ "activity_id": activities[0]._id },
+				{ "activity_id": activities[1]._id }
+			]			
+		}
+	],
+	"historic": []	
+}
+
+projeto5 = {
+	"name": "Project5",
+	"description": "Project Description",
+	"date-begin": Date.now(),
+	"date-dream": Date.now() + 10,
+	"date-end": Date.now() + 20,
+	"visible": true,
+	"realocate": false,
+	"expired": Date.now() + 50,
+	"visualizable_mod": "Teste",
+	"tags": ["tag4", "tag5", "tag6"]
+	"members": [],
+	"goals": [
+		{
+			"name": "Protesto",
+			"description": "Protestar na praça",
+			"date_begin": Date.now(),
+			"date_dream": Date.now() + 10,
+			"date_end": Date.now() + 20,
+			"realocate": false
+			"expired": Date.now() + 50,
+			"tags":["fora", "dilma", "pt"]
+			"activities": [
+			]			
+		}
+	],
+	"historic": []	
+}
+
+
+
 ```
 
 ## Retrieve - busca
