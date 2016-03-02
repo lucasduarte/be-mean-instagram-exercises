@@ -112,281 +112,58 @@ activity = {
 ```
 
 ## Create - cadastro
-1. Cadastre 10 usuários diferentes
+**1. Cadastre 10 usuários diferentes**
 ```
-be-mean> db.users.insert(user)
-be-mean> db.users.find(user)
-{
-  "_id": ObjectId("56d1046d4372c4bb17034bb6"),
-  "name": "Lucas Duarte Anicio",
-  "bio": "Test bio",
-  "date-register": 1456538718563,
-  "avatar-path": "avatar.png",
-  "background-path": "bg.png",
-  "auth": {
-    "username": "lucas",
-    "password": "secret",
-    "last-access": 1456538718563,
-    "online": true,
-    "disabled": false,
-    "hash-token": "ancfdsif"
-  }
+for(i = 0; i<10; i++) {
+	var user = {
+		"name":	"User " + i,
+		"bio": "Bio",
+		"date-register": new Date(),
+		"avatar-path": i + ".png",
+		"background-path": i + "-bg.png",
+	}
+	
+	db.users.insert(user);
 }
 
-be-mean> db.users.insert(user)
-be-mean> db.users.find(user)
-{
-  "_id": ObjectId("56d1052d3c0da5159bc579b4"),
-  "name": "Dilma Presidenta",
-  "bio": "Toma",
-  "date-register": 1456538920685,
-  "avatar-path": "avatar.png",
-  "background-path": "bg.png",
-  "auth": {
-    "username": "dilmae",
-    "password": "secret",
-    "last-access": 1456538920685,
-    "online": true,
-    "disabled": false,
-    "hash-token": "ladra"
-  }
-}
+Inserted 1 record(s) in 23ms
+Inserted 1 record(s) in 1ms
+Inserted 1 record(s) in 0ms
+Inserted 1 record(s) in 1ms
+Inserted 1 record(s) in 1ms
+Inserted 1 record(s) in 1ms
+Inserted 1 record(s) in 1ms
+Inserted 1 record(s) in 1ms
+Inserted 1 record(s) in 1ms
+Inserted 1 record(s) in 1ms
 
-be-mean> db.users.insert(user)
-be-mean> db.users.find(user)
-{
-  "_id": ObjectId("56d105933c0da5159bc579b5"),
-  "name": "Chico Cunha",
-  "bio": "Mosquito desgraçado",
-  "date-register": 1456539012495,
-  "avatar-path": "avatar.png",
-  "background-path": "bg.png",
-  "auth": {
-    "username": "chicao",
-    "password": "secret",
-    "last-access": 1456539012495,
-    "online": true,
-    "disabled": false,
-    "hash-token": "ladrao"
-  }
-}
-
-be-mean> db.users.insert(user)
-be-mean> db.users.find(user)
-{
-  "_id": ObjectId("56d106133c0da5159bc579b6"),
-  "name": "Lula Alma Honesta",
-  "bio": "Eu não sei de nada",
-  "date-register": 1456539095520,
-  "avatar-path": "avatar.png",
-  "background-path": "bg.png",
-  "auth": {
-    "username": "tentaculo",
-    "password": "secret",
-    "last-access": 1456539095520,
-    "online": true,
-    "disabled": false,
-    "hash-token": "chulispa"
-  }
-}
-
-be-mean> db.users.insert(user)
-be-mean> db.users.find(user)
-{
-  "_id": ObjectId("56d1068b3c0da5159bc579b7"),
-  "name": "Vera Verão",
-  "bio": "Tchola",
-  "date-register": 1456539272596,
-  "avatar-path": "avatar.png",
-  "background-path": "bg.png",
-  "auth": {
-    "username": "verao",
-    "password": "secret",
-    "last-access": 1456539272596,
-    "online": true,
-    "disabled": false,
-    "hash-token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
-  }
-}
-
-be-mean> db.users.insert(user)
-be-mean> db.users.find(user)
-{
-  "_id": ObjectId("56d106e43c0da5159bc579b8"),
-  "name": "Padre do Balão",
-  "bio": "Que loucura cara",
-  "date-register": 1456539362214,
-  "avatar-path": "avatar.png",
-  "background-path": "bg.png",
-  "auth": {
-    "username": "balao",
-    "password": "secret",
-    "last-access": 1456539362214,
-    "online": true,
-    "disabled": false,
-    "hash-token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
-  }
-}
-
-be-mean> db.users.insert(user)
-be-mean> db.users.find(user)
-{
-  "_id": ObjectId("56d107093c0da5159bc579b9"),
-  "name": "Caetano Veloso",
-  "bio": "Como você é burro cara",
-  "date-register": 1456539399117,
-  "avatar-path": "avatar.png",
-  "background-path": "bg.png",
-  "auth": {
-    "username": "burro",
-    "password": "secret",
-    "last-access": 1456539399117,
-    "online": true,
-    "disabled": false,
-    "hash-token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
-  }
-}
-
-be-mean> db.users.insert(user)
-be-mean> db.users.find(user)
-{
-  "_id": ObjectId("56d1073e3c0da5159bc579ba"),
-  "name": "David Brasil",
-  "bio": "nada",
-  "date-register": 1456539451588,
-  "avatar-path": "avatar.png",
-  "background-path": "bg.png",
-  "auth": {
-    "username": "brasil",
-    "password": "secret",
-    "last-access": 1456539451588,
-    "online": true,
-    "disabled": false,
-    "hash-token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
-  }
-}
-
-be-mean> db.users.insert(user)
-be-mean> db.users.find(user)
-{
-  "_id": ObjectId("56d108053c0da5159bc579bb"),
-  "name": "Chico Bioca",
-  "bio": "E tudo maix",
-  "date-register": 1456539650623,
-  "avatar-path": "avatar.png",
-  "background-path": "bg.png",
-  "auth": {
-    "username": "chicao",
-    "password": "secret",
-    "last-access": 1456539650623,
-    "online": true,
-    "disabled": false,
-    "hash-token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
-  }
-}
-
-be-mean> db.users.insert(user)
-be-mean> db.users.find(user)
-{
-  "_id": ObjectId("56d1088d3c0da5159bc579bc"),
-  "name": "Jailson Pai de Familia",
-  "bio": "Que delícia cara",
-  "date-register": 1456539770040,
-  "avatar-path": "avatar.png",
-  "background-path": "bg.png",
-  "auth": {
-    "username": "ursao",
-    "password": "secret",
-    "last-access": 1456539770040,
-    "online": true,
-    "disabled": false,
-    "hash-token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
-  }
-}
 ```
-2. Cadastre 5 projetos diferentes
+**2. Cadastre 5 projetos diferentes**
 ```
-var users = db.users.find()
-
-activity1 = {
-	"name": "Activity1",
-	"description": "Example description",
-	"date-begin": Date.now(),
-	"date-dream": Date.now() + 10,
-	"date-end": Date.now() + 20,
-	"realocate": false,
-	"expired": Date.now() + 50,
-	"members": [
-		{
-			"user_id": users[0]._id,
-			"notify": true,
-			"type-name": "type"	
-		}
-	],
-	"historic": [],
-	"comments": [],
-	"tags": []
+//Cadastrando primeiramente as activities
+for(i = 0; i<2; i++) {
+	var activity = {
+	    "name": "Activity " + i,
+	    "description": "Description",
+	    "date-begin": new Date(),
+	    "date-dream": new Date() + 10,
+	    "date-end": new Date() + 20,
+	    "realocate": false,
+	    "expired": new Date() + 50,
+	    "tags": [],
+	    "members": [],
+	    "historic": [],
+	    "comments": []
+	}
+	
+	db.activities.insert(activity);
 }
 
-{
-  "name": "Activity1",
-  "description": "Example description",
-  "date-begin": 1456787696496,
-  "date-dream": 1456787696506,
-  "date-end": 1456787696516,
-  "realocate": false,
-  "expired": 1456787696546,
-  "members": [
-    {
-      "user_id": ObjectId("56d1046d4372c4bb17034bb6"),
-      "notify": true,
-      "type-name": "type"
-    }
-  ],
-  "historic": [ ],
-  "comments": [ ],
-  "tags": [ ]
-}
+Inserted 1 record(s) in 17ms
+Inserted 1 record(s) in 1ms
 
-activity2 = {
-	"name": "Activity2",
-	"description": "Example description",
-	"date-begin": Date.now(),
-	"date-dream": Date.now() + 10,
-	"date-end": Date.now() + 20,
-	"realocate": false,
-	"expired": Date.now() + 50,
-	"members": [
-		{
-			"user_id": users[1]._id,
-			"notify": true,
-			"type-name": "type"	
-		}
-	],
-	"historic": [],
-	"comments": [],
-	"tags": []
-}
 
-{
-  "name": "Activity2",
-  "description": "Example description",
-  "date-begin": 1456787910131,
-  "date-dream": 1456787910141,
-  "date-end": 1456787910151,
-  "realocate": false,
-  "expired": 1456787910181,
-  "members": [
-    {
-      "user_id": ObjectId("56d1052d3c0da5159bc579b4"),
-      "notify": true,
-      "type-name": "type"
-    }
-  ],
-  "historic": [ ],
-  "comments": [ ],
-  "tags": [ ]
-}
+
 
 projeto1 = {
 	"name": "Fora Dilma",
