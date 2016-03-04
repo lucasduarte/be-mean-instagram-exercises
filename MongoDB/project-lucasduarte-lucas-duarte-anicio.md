@@ -164,164 +164,726 @@ Inserted 1 record(s) in 1ms
 
 
 
-
-projeto1 = {
-	"name": "Fora Dilma",
-	"description": "Tirar a presidente do poder",
-	"date-begin": Date.now(),
-	"date-dream": Date.now() + 10,
-	"date-end": Date.now() + 20,
-	"visible": true,
-	"realocate": false,
-	"expired": Date.now() + 50,
-	"visualizable_mod": "Teste",
-	"tags": ["importante", "dilma", "presidente"]
-	"members": [],
-	"goals": [
-		{
-			"name": "Protesto",
-			"description": "Protestar na praça",
-			"date_begin": Date.now(),
-			"date_dream": Date.now() + 10,
-			"date_end": Date.now() + 20,
-			"realocate": false
-			"expired": Date.now() + 50,
-			"tags":["fora", "dilma", "pt"]
-			"activities": [
-				{ "activity_id": activities[0]._id },
-				{ "activity_id": activities[1]._id }]		
-		}
-	],
-	"historic": []	
+//1 Tag em dois projetos
+for(var i=0; i<2; i++){
+    var project = {
+    	"name": "Project" + i,
+    	"description": "Description",
+    	"date-begin": new Date(),
+    	"date-dream": new Date(),
+    	"date-end": new Date(),
+    	"visible": true,
+    	"realocate": false,
+    	"expired": new Date(),
+    	"visualizable_mod": "Teste",
+    	"tags": ["Tag1", "random" + i, "anothertag" + i],
+    	"members": [ db.users.aggregate([{ $sample: { size:5 }}]) ],
+    	"historic": [ ],
+    	"goals": [{
+			"name": "goal",
+			"description": "description",
+			"date_begin": new Date(),
+			"date_dream": new Date(),
+			"date_end": new Date(),
+			"realocate": false,
+			"expired": new Date(),
+			"tags":["tag1", "tag2", "tag3"],
+			"activities": [ db.activities.aggregate([{ $sample: { size:2 }}]) ]	
+    	}]
+    }
+    
+    db.projects.insert(project);
 }
+Inserted 1 record(s) in 5ms
+Inserted 1 record(s) in 1ms
 
-projeto2 = {
-	"name": "Project2",
-	"description": "Project Description",
-	"date-begin": Date.now(),
-	"date-dream": Date.now() + 10,
-	"date-end": Date.now() + 20,
-	"visible": true,
-	"realocate": false,
-	"expired": Date.now() + 50,
-	"visualizable_mod": "Teste",
-	"tags": ["importante", "saifora", "presidente"]
-	"members": [],
-	"goals": [
-		{
-			"name": "Protesto",
-			"description": "Protestar na praça",
-			"date_begin": Date.now(),
-			"date_dream": Date.now() + 10,
-			"date_end": Date.now() + 20,
-			"realocate": false
-			"expired": Date.now() + 50,
-			"tags":["fora", "dilma", "pt"]
-			"activities": [
-				{ "activity_id": activities[0]._id },
-				{ "activity_id": activities[1]._id }
-			]			
-		}
-	],
-	"historic": []	
+//1 tag em 3 projetos e um projeto sem activity
+for(var i=2; i<4; i++){
+    var project = {
+    	"name": "Project" + i,
+    	"description": "Description",
+    	"date-begin": new Date(),
+    	"date-dream": new Date(),
+    	"date-end": new Date(),
+    	"visible": true,
+    	"realocate": false,
+    	"expired": new Date(),
+    	"visualizable_mod": "Teste",
+    	"tags": ["Tag2", "randomtag" + i, "anothertagrandom" + i],
+    	"members": [ db.users.aggregate([{ $sample: { size:5 }}]) ],
+    	"historic": [ ],
+    	"goals": [{
+			"name": "goal",
+			"description": "description",
+			"date_begin": new Date(),
+			"date_dream": new Date(),
+			"date_end": new Date(),
+			"realocate": false,
+			"expired": new Date(),
+			"tags":["tag1", "tag2", "tag3"],
+			"activities": [ 
+			        db.activities.aggregate([{ $sample: { size:2 }}]) 
+			 ]	
+    	}]
+    }
+    
+    db.projects.insert(project);
 }
+Inserted 1 record(s) in 1ms
+Inserted 1 record(s) in 3ms
 
-projeto3 = {
-	"name": "Project3",
-	"description": "Project Description",
-	"date-begin": Date.now(),
-	"date-dream": Date.now() + 10,
-	"date-end": Date.now() + 20,
-	"visible": true,
-	"realocate": false,
-	"expired": Date.now() + 50,
-	"visualizable_mod": "Teste",
-	"tags": ["importante", "somedaqui", "nothing"]
-	"members": [],
-	"goals": [
-		{
-			"name": "Protesto",
-			"description": "Protestar na praça",
-			"date_begin": Date.now(),
-			"date_dream": Date.now() + 10,
-			"date_end": Date.now() + 20,
-			"realocate": false
-			"expired": Date.now() + 50,
-			"tags":["fora", "dilma", "pt"]
-			"activities": [
-				{ "activity_id": activities[0]._id },
-				{ "activity_id": activities[1]._id }
-			]			
-		}
-	],
-	"historic": []	
+var project = {
+   	"name": "Project5",
+   	"description": "Description",
+   	"date-begin": new Date(),
+   	"date-dream": new Date(),
+   	"date-end": new Date(),
+   	"visible": true,
+   	"realocate": false,
+   	"expired": new Date(),
+   	"visualizable_mod": "Teste",
+   	"tags": ["Tag2", "randomtag5", "anothertagrandom5"],
+   	"members": [ db.users.aggregate([{ $sample: { size:5 }}]) ],
+   	"historic": [ ],
+   	"goals": [{
+		"name": "goal",
+		"description": "description",
+		"date_begin": new Date(),
+		"date_dream": new Date(),
+		"date_end": new Date(),
+		"realocate": false,
+		"expired": new Date(),
+		"tags":["tag1", "tag2", "tag3"],
+		"activities": [ 
+		        
+		 ]	
+   	}]
 }
-
-projeto4 = {
-	"name": "Project4",
-	"description": "Project Description",
-	"date-begin": Date.now(),
-	"date-dream": Date.now() + 10,
-	"date-end": Date.now() + 20,
-	"visible": true,
-	"realocate": false,
-	"expired": Date.now() + 50,
-	"visualizable_mod": "Teste",
-	"tags": ["tag1", "tag2", "tag3"]
-	"members": [],
-	"goals": [
-		{
-			"name": "Protesto",
-			"description": "Protestar na praça",
-			"date_begin": Date.now(),
-			"date_dream": Date.now() + 10,
-			"date_end": Date.now() + 20,
-			"realocate": false
-			"expired": Date.now() + 50,
-			"tags":["fora", "dilma", "pt"]
-			"activities": [
-				{ "activity_id": activities[0]._id },
-				{ "activity_id": activities[1]._id }
-			]			
-		}
-	],
-	"historic": []	
-}
-
-projeto5 = {
-	"name": "Project5",
-	"description": "Project Description",
-	"date-begin": Date.now(),
-	"date-dream": Date.now() + 10,
-	"date-end": Date.now() + 20,
-	"visible": true,
-	"realocate": false,
-	"expired": Date.now() + 50,
-	"visualizable_mod": "Teste",
-	"tags": ["tag4", "tag5", "tag6"]
-	"members": [],
-	"goals": [
-		{
-			"name": "Protesto",
-			"description": "Protestar na praça",
-			"date_begin": Date.now(),
-			"date_dream": Date.now() + 10,
-			"date_end": Date.now() + 20,
-			"realocate": false
-			"expired": Date.now() + 50,
-			"tags":["fora", "dilma", "pt"]
-			"activities": [
-			]			
-		}
-	],
-	"historic": []	
-}
-
-
-
+db.projects.insert(project);
+Inserted 1 record(s) in 1ms
 ```
 
 ## Retrieve - busca
+**1. Liste as informações dos membros de 1 projeto específico que deve ser buscado pelo seu nome de forma a não ligar para maiúsculas e minúsculas.**
+```
+be-mean> db.projects.find({name: /project0/i}, {members: 1} );
+{
+  "_id": ObjectId("56d8cc1ff8b6cd6dd0bf7ea2"),
+  "members": [
+    {
+      "waitedMS": NumberLong("0"),
+      "result": [
+        {
+          "_id": ObjectId("56d60c198609f803e485e5f7"),
+          "name": "User 6",
+          "bio": "Bio",
+          "date-register": ISODate("2016-03-01T21:39:37.013Z"),
+          "avatar-path": "6.png",
+          "background-path": "6-bg.png"
+        },
+        {
+          "_id": ObjectId("56d60c198609f803e485e5f3"),
+          "name": "User 2",
+          "bio": "Bio",
+          "date-register": ISODate("2016-03-01T21:39:37.010Z"),
+          "avatar-path": "2.png",
+          "background-path": "2-bg.png"
+        },
+        {
+          "_id": ObjectId("56d60c198609f803e485e5f4"),
+          "name": "User 3",
+          "bio": "Bio",
+          "date-register": ISODate("2016-03-01T21:39:37.010Z"),
+          "avatar-path": "3.png",
+          "background-path": "3-bg.png"
+        },
+        {
+          "_id": ObjectId("56d60c188609f803e485e5f1"),
+          "name": "User 0",
+          "bio": "Bio",
+          "date-register": ISODate("2016-03-01T21:39:36.986Z"),
+          "avatar-path": "0.png",
+          "background-path": "0-bg.png"
+        },
+        {
+          "_id": ObjectId("56d60c198609f803e485e5f5"),
+          "name": "User 4",
+          "bio": "Bio",
+          "date-register": ISODate("2016-03-01T21:39:37.011Z"),
+          "avatar-path": "4.png",
+          "background-path": "4-bg.png"
+        }
+      ],
+      "ok": 1
+    }
+  ]
+}
+Fetched 1 record(s) in 2ms
+
+```
+**2. Liste todos os projetos com a tag que você escolheu para os 3 projetos em comum.**
+```
+be-mean> db.projects.find({tags: { $eq: 'Tag2' } })
+{
+  "_id": ObjectId("56d8cd1af8b6cd6dd0bf7ea4"),
+  "name": "Project2",
+  "description": "Description",
+  "date-begin": ISODate("2016-03-03T23:47:38.794Z"),
+  "date-dream": ISODate("2016-03-03T23:47:38.794Z"),
+  "date-end": ISODate("2016-03-03T23:47:38.794Z"),
+  "visible": true,
+  "realocate": false,
+  "expired": ISODate("2016-03-03T23:47:38.794Z"),
+  "visualizable_mod": "Teste",
+  "tags": [
+    "Tag2",
+    "randomtag2",
+    "anothertagrandom2"
+  ],
+  "members": [
+    {
+      "waitedMS": NumberLong("0"),
+      "result": [
+        {
+          "_id": ObjectId("56d60c198609f803e485e5f9"),
+          "name": "User 8",
+          "bio": "Bio",
+          "date-register": ISODate("2016-03-01T21:39:37.015Z"),
+          "avatar-path": "8.png",
+          "background-path": "8-bg.png"
+        },
+        {
+          "_id": ObjectId("56d60c198609f803e485e5f3"),
+          "name": "User 2",
+          "bio": "Bio",
+          "date-register": ISODate("2016-03-01T21:39:37.010Z"),
+          "avatar-path": "2.png",
+          "background-path": "2-bg.png"
+        },
+        {
+          "_id": ObjectId("56d60c198609f803e485e5f6"),
+          "name": "User 5",
+          "bio": "Bio",
+          "date-register": ISODate("2016-03-01T21:39:37.012Z"),
+          "avatar-path": "5.png",
+          "background-path": "5-bg.png"
+        },
+        {
+          "_id": ObjectId("56d60c198609f803e485e5f5"),
+          "name": "User 4",
+          "bio": "Bio",
+          "date-register": ISODate("2016-03-01T21:39:37.011Z"),
+          "avatar-path": "4.png",
+          "background-path": "4-bg.png"
+        },
+        {
+          "_id": ObjectId("56d60c198609f803e485e5f7"),
+          "name": "User 6",
+          "bio": "Bio",
+          "date-register": ISODate("2016-03-01T21:39:37.013Z"),
+          "avatar-path": "6.png",
+          "background-path": "6-bg.png"
+        }
+      ],
+      "ok": 1
+    }
+  ],
+  "historic": [ ],
+  "goals": [
+    {
+      "name": "goal",
+      "description": "description",
+      "date_begin": ISODate("2016-03-03T23:47:38.795Z"),
+      "date_dream": ISODate("2016-03-03T23:47:38.795Z"),
+      "date_end": ISODate("2016-03-03T23:47:38.795Z"),
+      "realocate": false,
+      "expired": ISODate("2016-03-03T23:47:38.795Z"),
+      "tags": [
+        "tag1",
+        "tag2",
+        "tag3"
+      ],
+      "activities": [
+        {
+          "waitedMS": NumberLong("0"),
+          "result": [
+            {
+              "_id": ObjectId("56d613b98609f803e485e5fc"),
+              "name": "Activity 1",
+              "description": "Description",
+              "date-begin": ISODate("2016-03-01T22:12:09.667Z"),
+              "date-dream": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)10",
+              "date-end": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)20",
+              "realocate": false,
+              "expired": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)50",
+              "tags": [ ],
+              "members": [ ],
+              "historic": [ ],
+              "comments": [ ]
+            },
+            {
+              "_id": ObjectId("56d613b98609f803e485e5fb"),
+              "name": "Activity 0",
+              "description": "Description",
+              "date-begin": ISODate("2016-03-01T22:12:09.650Z"),
+              "date-dream": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)10",
+              "date-end": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)20",
+              "realocate": false,
+              "expired": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)50",
+              "tags": [ ],
+              "members": [ ],
+              "historic": [ ],
+              "comments": [ ]
+            }
+          ],
+          "ok": 1
+        }
+      ]
+    }
+  ]
+}
+{
+  "_id": ObjectId("56d8cd1af8b6cd6dd0bf7ea5"),
+  "name": "Project3",
+  "description": "Description",
+  "date-begin": ISODate("2016-03-03T23:47:38.797Z"),
+  "date-dream": ISODate("2016-03-03T23:47:38.797Z"),
+  "date-end": ISODate("2016-03-03T23:47:38.797Z"),
+  "visible": true,
+  "realocate": false,
+  "expired": ISODate("2016-03-03T23:47:38.797Z"),
+  "visualizable_mod": "Teste",
+  "tags": [
+    "Tag2",
+    "randomtag3",
+    "anothertagrandom3"
+  ],
+  "members": [
+    {
+      "waitedMS": NumberLong("0"),
+      "result": [
+        {
+          "_id": ObjectId("56d60c198609f803e485e5f9"),
+          "name": "User 8",
+          "bio": "Bio",
+          "date-register": ISODate("2016-03-01T21:39:37.015Z"),
+          "avatar-path": "8.png",
+          "background-path": "8-bg.png"
+        },
+        {
+          "_id": ObjectId("56d60c198609f803e485e5f2"),
+          "name": "User 1",
+          "bio": "Bio",
+          "date-register": ISODate("2016-03-01T21:39:37.009Z"),
+          "avatar-path": "1.png",
+          "background-path": "1-bg.png"
+        },
+        {
+          "_id": ObjectId("56d60c198609f803e485e5fa"),
+          "name": "User 9",
+          "bio": "Bio",
+          "date-register": ISODate("2016-03-01T21:39:37.016Z"),
+          "avatar-path": "9.png",
+          "background-path": "9-bg.png"
+        },
+        {
+          "_id": ObjectId("56d60c198609f803e485e5f7"),
+          "name": "User 6",
+          "bio": "Bio",
+          "date-register": ISODate("2016-03-01T21:39:37.013Z"),
+          "avatar-path": "6.png",
+          "background-path": "6-bg.png"
+        },
+        {
+          "_id": ObjectId("56d60c198609f803e485e5f4"),
+          "name": "User 3",
+          "bio": "Bio",
+          "date-register": ISODate("2016-03-01T21:39:37.010Z"),
+          "avatar-path": "3.png",
+          "background-path": "3-bg.png"
+        }
+      ],
+      "ok": 1
+    }
+  ],
+  "historic": [ ],
+  "goals": [
+    {
+      "name": "goal",
+      "description": "description",
+      "date_begin": ISODate("2016-03-03T23:47:38.798Z"),
+      "date_dream": ISODate("2016-03-03T23:47:38.798Z"),
+      "date_end": ISODate("2016-03-03T23:47:38.798Z"),
+      "realocate": false,
+      "expired": ISODate("2016-03-03T23:47:38.798Z"),
+      "tags": [
+        "tag1",
+        "tag2",
+        "tag3"
+      ],
+      "activities": [
+        {
+          "waitedMS": NumberLong("0"),
+          "result": [
+            {
+              "_id": ObjectId("56d613b98609f803e485e5fb"),
+              "name": "Activity 0",
+              "description": "Description",
+              "date-begin": ISODate("2016-03-01T22:12:09.650Z"),
+              "date-dream": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)10",
+              "date-end": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)20",
+              "realocate": false,
+              "expired": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)50",
+              "tags": [ ],
+              "members": [ ],
+              "historic": [ ],
+              "comments": [ ]
+            },
+            {
+              "_id": ObjectId("56d613b98609f803e485e5fc"),
+              "name": "Activity 1",
+              "description": "Description",
+              "date-begin": ISODate("2016-03-01T22:12:09.667Z"),
+              "date-dream": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)10",
+              "date-end": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)20",
+              "realocate": false,
+              "expired": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)50",
+              "tags": [ ],
+              "members": [ ],
+              "historic": [ ],
+              "comments": [ ]
+            }
+          ],
+          "ok": 1
+        }
+      ]
+    }
+  ]
+}
+{
+  "_id": ObjectId("56d8cd48f8b6cd6dd0bf7ea6"),
+  "name": "Project5",
+  "description": "Description",
+  "date-begin": ISODate("2016-03-03T23:48:23.372Z"),
+  "date-dream": ISODate("2016-03-03T23:48:23.372Z"),
+  "date-end": ISODate("2016-03-03T23:48:23.372Z"),
+  "visible": true,
+  "realocate": false,
+  "expired": ISODate("2016-03-03T23:48:23.372Z"),
+  "visualizable_mod": "Teste",
+  "tags": [
+    "Tag2",
+    "randomtag5",
+    "anothertagrandom5"
+  ],
+  "members": [
+    {
+      "waitedMS": NumberLong("0"),
+      "result": [
+        {
+          "_id": ObjectId("56d60c198609f803e485e5fa"),
+          "name": "User 9",
+          "bio": "Bio",
+          "date-register": ISODate("2016-03-01T21:39:37.016Z"),
+          "avatar-path": "9.png",
+          "background-path": "9-bg.png"
+        },
+        {
+          "_id": ObjectId("56d60c198609f803e485e5f4"),
+          "name": "User 3",
+          "bio": "Bio",
+          "date-register": ISODate("2016-03-01T21:39:37.010Z"),
+          "avatar-path": "3.png",
+          "background-path": "3-bg.png"
+        },
+        {
+          "_id": ObjectId("56d60c198609f803e485e5f5"),
+          "name": "User 4",
+          "bio": "Bio",
+          "date-register": ISODate("2016-03-01T21:39:37.011Z"),
+          "avatar-path": "4.png",
+          "background-path": "4-bg.png"
+        },
+        {
+          "_id": ObjectId("56d60c198609f803e485e5f2"),
+          "name": "User 1",
+          "bio": "Bio",
+          "date-register": ISODate("2016-03-01T21:39:37.009Z"),
+          "avatar-path": "1.png",
+          "background-path": "1-bg.png"
+        },
+        {
+          "_id": ObjectId("56d60c188609f803e485e5f1"),
+          "name": "User 0",
+          "bio": "Bio",
+          "date-register": ISODate("2016-03-01T21:39:36.986Z"),
+          "avatar-path": "0.png",
+          "background-path": "0-bg.png"
+        }
+      ],
+      "ok": 1
+    }
+  ],
+  "historic": [ ],
+  "goals": [
+    {
+      "name": "goal",
+      "description": "description",
+      "date_begin": ISODate("2016-03-03T23:48:23.372Z"),
+      "date_dream": ISODate("2016-03-03T23:48:23.372Z"),
+      "date_end": ISODate("2016-03-03T23:48:23.372Z"),
+      "realocate": false,
+      "expired": ISODate("2016-03-03T23:48:23.372Z"),
+      "tags": [
+        "tag1",
+        "tag2",
+        "tag3"
+      ],
+      "activities": [ ]
+    }
+  ]
+}
+Fetched 3 record(s) in 6ms
+```
+
+**3. Liste apenas os nomes de todas as atividades para todos os projetos.**
+```
+be-mean> db.projects.find({}, {"goals.activities": 1})
+{
+  "_id": ObjectId("56d8cc1ff8b6cd6dd0bf7ea2"),
+  "goals": [
+    {
+      "activities": [
+        {
+          "waitedMS": NumberLong("0"),
+          "result": [
+            {
+              "_id": ObjectId("56d613b98609f803e485e5fb"),
+              "name": "Activity 0",
+              "description": "Description",
+              "date-begin": ISODate("2016-03-01T22:12:09.650Z"),
+              "date-dream": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)10",
+              "date-end": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)20",
+              "realocate": false,
+              "expired": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)50",
+              "tags": [ ],
+              "members": [ ],
+              "historic": [ ],
+              "comments": [ ]
+            },
+            {
+              "_id": ObjectId("56d613b98609f803e485e5fc"),
+              "name": "Activity 1",
+              "description": "Description",
+              "date-begin": ISODate("2016-03-01T22:12:09.667Z"),
+              "date-dream": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)10",
+              "date-end": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)20",
+              "realocate": false,
+              "expired": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)50",
+              "tags": [ ],
+              "members": [ ],
+              "historic": [ ],
+              "comments": [ ]
+            }
+          ],
+          "ok": 1
+        }
+      ]
+    }
+  ]
+}
+{
+  "_id": ObjectId("56d8cc1ff8b6cd6dd0bf7ea3"),
+  "goals": [
+    {
+      "activities": [
+        {
+          "waitedMS": NumberLong("0"),
+          "result": [
+            {
+              "_id": ObjectId("56d613b98609f803e485e5fc"),
+              "name": "Activity 1",
+              "description": "Description",
+              "date-begin": ISODate("2016-03-01T22:12:09.667Z"),
+              "date-dream": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)10",
+              "date-end": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)20",
+              "realocate": false,
+              "expired": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)50",
+              "tags": [ ],
+              "members": [ ],
+              "historic": [ ],
+              "comments": [ ]
+            },
+            {
+              "_id": ObjectId("56d613b98609f803e485e5fb"),
+              "name": "Activity 0",
+              "description": "Description",
+              "date-begin": ISODate("2016-03-01T22:12:09.650Z"),
+              "date-dream": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)10",
+              "date-end": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)20",
+              "realocate": false,
+              "expired": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)50",
+              "tags": [ ],
+              "members": [ ],
+              "historic": [ ],
+              "comments": [ ]
+            }
+          ],
+          "ok": 1
+        }
+      ]
+    }
+  ]
+}
+{
+  "_id": ObjectId("56d8cd1af8b6cd6dd0bf7ea4"),
+  "goals": [
+    {
+      "activities": [
+        {
+          "waitedMS": NumberLong("0"),
+          "result": [
+            {
+              "_id": ObjectId("56d613b98609f803e485e5fc"),
+              "name": "Activity 1",
+              "description": "Description",
+              "date-begin": ISODate("2016-03-01T22:12:09.667Z"),
+              "date-dream": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)10",
+              "date-end": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)20",
+              "realocate": false,
+              "expired": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)50",
+              "tags": [ ],
+              "members": [ ],
+              "historic": [ ],
+              "comments": [ ]
+            },
+            {
+              "_id": ObjectId("56d613b98609f803e485e5fb"),
+              "name": "Activity 0",
+              "description": "Description",
+              "date-begin": ISODate("2016-03-01T22:12:09.650Z"),
+              "date-dream": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)10",
+              "date-end": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)20",
+              "realocate": false,
+              "expired": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)50",
+              "tags": [ ],
+              "members": [ ],
+              "historic": [ ],
+              "comments": [ ]
+            }
+          ],
+          "ok": 1
+        }
+      ]
+    }
+  ]
+}
+{
+  "_id": ObjectId("56d8cd1af8b6cd6dd0bf7ea5"),
+  "goals": [
+    {
+      "activities": [
+        {
+          "waitedMS": NumberLong("0"),
+          "result": [
+            {
+              "_id": ObjectId("56d613b98609f803e485e5fb"),
+              "name": "Activity 0",
+              "description": "Description",
+              "date-begin": ISODate("2016-03-01T22:12:09.650Z"),
+              "date-dream": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)10",
+              "date-end": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)20",
+              "realocate": false,
+              "expired": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)50",
+              "tags": [ ],
+              "members": [ ],
+              "historic": [ ],
+              "comments": [ ]
+            },
+            {
+              "_id": ObjectId("56d613b98609f803e485e5fc"),
+              "name": "Activity 1",
+              "description": "Description",
+              "date-begin": ISODate("2016-03-01T22:12:09.667Z"),
+              "date-dream": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)10",
+              "date-end": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)20",
+              "realocate": false,
+              "expired": "Tue Mar 01 2016 19:12:09 GMT-0300 (BRT)50",
+              "tags": [ ],
+              "members": [ ],
+              "historic": [ ],
+              "comments": [ ]
+            }
+          ],
+          "ok": 1
+        }
+      ]
+    }
+  ]
+}
+{
+  "_id": ObjectId("56d8cd48f8b6cd6dd0bf7ea6"),
+  "goals": [
+    {
+      "activities": [ ]
+    }
+  ]
+}
+Fetched 5 record(s) in 4ms
+```
+
+**4. Liste todos os projetos que não possuam uma tag.**
+```
+be-mean> db.projects.find({ tags: [] })
+```
+
+**5. Liste todos os usuários que não fazem parte do primeiro projeto cadastrado.**
+```
+be-mean> var users = db.projects.find({name: /Project0/}, {"members._id": 1, _id: 0})
+be-mean> db.users.find({ _id: { $not: { $in: users } } })
+{
+  "_id": ObjectId("56d60c198609f803e485e5f2"),
+  "name": "User 1",
+  "bio": "Bio",
+  "date-register": ISODate("2016-03-01T21:39:37.009Z"),
+  "avatar-path": "1.png",
+  "background-path": "1-bg.png"
+}
+{
+  "_id": ObjectId("56d60c198609f803e485e5f6"),
+  "name": "User 5",
+  "bio": "Bio",
+  "date-register": ISODate("2016-03-01T21:39:37.012Z"),
+  "avatar-path": "5.png",
+  "background-path": "5-bg.png"
+}
+{
+  "_id": ObjectId("56d60c198609f803e485e5f8"),
+  "name": "User 7",
+  "bio": "Bio",
+  "date-register": ISODate("2016-03-01T21:39:37.014Z"),
+  "avatar-path": "7.png",
+  "background-path": "7-bg.png"
+}
+{
+  "_id": ObjectId("56d60c198609f803e485e5f9"),
+  "name": "User 8",
+  "bio": "Bio",
+  "date-register": ISODate("2016-03-01T21:39:37.015Z"),
+  "avatar-path": "8.png",
+  "background-path": "8-bg.png"
+}
+{
+  "_id": ObjectId("56d60c198609f803e485e5fa"),
+  "name": "User 9",
+  "bio": "Bio",
+  "date-register": ISODate("2016-03-01T21:39:37.016Z"),
+  "avatar-path": "9.png",
+  "background-path": "9-bg.png"
+}
+Fetched 5 record(s) in 1ms
+
+```
 
 ## Update - alteração
 
