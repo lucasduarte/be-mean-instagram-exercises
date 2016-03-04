@@ -887,10 +887,106 @@ Fetched 5 record(s) in 1ms
 
 ## Update - alteração
 
+**1. Adicione para todos os projetos o campo views: 0.**
+```
+be-mean> db.projects.update({}, { $set: {views: 0} }, { multi: true} )
+Updated 5 existing record(s) in 1ms
+WriteResult({
+  "nMatched": 5,
+  "nUpserted": 0,
+  "nModified": 5
+})
+
+```
+**2. Adicione 1 tag diferente para cada projeto.**
+```
+var number = 0;
+var projects = db.projects.find();
+projects.forEach(function(project){
+    var query = { "_id": project._id} ;
+    var mod = { $push: { "tags": "TagNova" + ++number } }
+    db.projects.update(query, mod);
+})
+Updated 1 existing record(s) in 6ms
+Updated 1 existing record(s) in 0ms
+Updated 1 existing record(s) in 0ms
+Updated 1 existing record(s) in 1ms
+Updated 1 existing record(s) in 1ms
+```
+**3. Adicione 2 membros diferentes para cada projeto.**
+```
+var projects = db.projects.find();
+projects.forEach(function(project){
+    var query = { "_id": project._id} ;
+    var members = db.users.aggregate([{$sample: {size: 2}}]).result
+    var mod = { $push: { "members": members } }
+    db.projects.update(query, mod);
+})
+Updated 1 existing record(s) in 1ms
+Updated 1 existing record(s) in 1ms
+Updated 1 existing record(s) in 1ms
+Updated 1 existing record(s) in 2ms
+Updated 1 existing record(s) in 1ms
+
+```
+**4. Adicione 1 comentário em cada atividade, deixe apenas 1 projeto sem.**
+```
+
+```
+**5. Adicione 1 projeto inteiro com UPSERT.**
+```
+
+```
+
 ## Delete - remoção
 
-## Sharding
-// coloque aqui todos os comandos que você executou
+**1. Apague todos os projetos que não possuam tags.**
+```
 
-## Replica
-// coloque aqui todos os comandos que você executou
+```
+**2. Apague todos os projetos que não possuam comentários nas atividades.**
+```
+
+```
+**3. Apague todos os projetos que não possuam atividades.**
+```
+
+```
+**4. Escolha 2 usuário e apague todos os projetos em que os 2 fazem parte.**
+```
+
+```
+**5. Apague todos os projetos que possuam uma determinada tag em goal.**
+```
+
+```
+
+## Gerenciamento de usuários
+
+**1. Crie um usuário com permissões APENAS de Leitura.**
+```
+
+```
+**2. Crie um usuário com permissões de Escrita e Leitura.**
+```
+
+```
+**3. Adicionar o papel grantRolesToUser e revokeRole para o usuário com Escrita e Leitura.**
+```
+
+```
+**4. Remover o papel grantRolesToUser para o usuário com Escrita e Leitura.**
+```
+
+```
+**5. Listar todos os usuários com seus papéis e ações.**
+```
+
+```
+
+## Cluster
+
+1 Router
+1 Config Server
+3 Shardings
+3 Replicas
