@@ -67,7 +67,7 @@ projects = {
 ```
 
 ## Qual a modelagem da sua coleção retirada de `projects`?
-```js
+```
 activity = {
 	"name": String,
 	"description": String,
@@ -647,7 +647,7 @@ Fetched 3 record(s) in 6ms
 ```
 
 **3. Liste apenas os nomes de todas as atividades para todos os projetos.**
-```
+```js
 be-mean> db.projects.find({}, {"goals.activities": 1})
 {
   "_id": ObjectId("56d8cc1ff8b6cd6dd0bf7ea2"),
@@ -838,7 +838,7 @@ be-mean> db.projects.find({ tags: [] })
 ```
 
 **5. Liste todos os usuários que não fazem parte do primeiro projeto cadastrado.**
-```
+```js
 be-mean> var users = db.projects.find({name: /Project0/}, {"members._id": 1, _id: 0})
 be-mean> db.users.find({ _id: { $not: { $in: users } } })
 {
@@ -888,7 +888,7 @@ Fetched 5 record(s) in 1ms
 ## Update - alteração
 
 **1. Adicione para todos os projetos o campo views: 0.**
-```
+```js
 be-mean> db.projects.update({}, { $set: {views: 0} }, { multi: true} )
 Updated 5 existing record(s) in 1ms
 WriteResult({
@@ -899,7 +899,7 @@ WriteResult({
 
 ```
 **2. Adicione 1 tag diferente para cada projeto.**
-```
+```js
 var number = 0;
 var projects = db.projects.find();
 projects.forEach(function(project){
@@ -914,7 +914,7 @@ Updated 1 existing record(s) in 1ms
 Updated 1 existing record(s) in 1ms
 ```
 **3. Adicione 2 membros diferentes para cada projeto.**
-```
+```js
 var projects = db.projects.find();
 projects.forEach(function(project){
     var query = { "_id": project._id} ;
@@ -930,7 +930,7 @@ Updated 1 existing record(s) in 1ms
 
 ```
 **4. Adicione 1 comentário em cada atividade, deixe apenas 1 projeto sem.**
-```
+```js
 var activities = db.activities.find()
 
 activities.forEach(function(activity){
@@ -941,7 +941,7 @@ activities.forEach(function(activity){
 })
 ```
 **5. Adicione 1 projeto inteiro com UPSERT.**
-```
+```js
 var project = {
     	"name": "New Project",
     	"description": "Description",
@@ -984,11 +984,11 @@ WriteResult({
 ## Delete - remoção
 
 **1. Apague todos os projetos que não possuam tags.**
-```
+```js
 db.project.remove({"tags" : {$size : 0}})
 ```
 **2. Apague todos os projetos que não possuam comentários nas atividades.**
-```
+```js
 var query = {
         $or: [{
             comments: { $eq: [ ] }
@@ -1005,7 +1005,7 @@ db.activities.remove({ _id: { $in: ids } });
 db.projects.remove({ "goals.activities.activity_id": { $in: ids } });
 ```
 **3. Apague todos os projetos que não possuam atividades.**
-```
+```js
 be-mean> var query = { "goals.activities": { $size: 0 } } 
 be-mean> db.projects.remove(query)
 Removed 1 record(s) in 0ms
@@ -1015,19 +1015,19 @@ WriteResult({
 
 ```
 **4. Escolha 2 usuários e apague todos os projetos em que os 2 fazem parte.**
-```
+```js
 var users = db.user.find()
 db.project.remove({$and : [{"members.user_id" : users[0]._id},{"members.user_id" : users[1]._id}]})
 ```
 **5. Apague todos os projetos que possuam uma determinada tag em goal.**
-```
+```js
 db.project.remove({"goals.tags" : {$eq : "Tag1"}})
 ```
 
 ## Gerenciamento de usuários
 
 **1. Crie um usuário com permissões APENAS de Leitura.**
-```
+```js
 be-mean> db.createUser({user: "lucas", pwd: "secret", roles: ["read"]})
 Successfully added user: {
   "user": "lucas",
@@ -1038,7 +1038,7 @@ Successfully added user: {
 
 ```
 **2. Crie um usuário com permissões de Escrita e Leitura.**
-```
+```js
 be-mean> db.createUser({user: "lucasWrite", pwd: "secret", roles: ["readWrite"]}) 
 Successfully added user: {
   "user": "lucasWrite",
@@ -1049,7 +1049,7 @@ Successfully added user: {
 
 ```
 **3. Adicionar o papel grantRolesToUser e revokeRole para o usuário com Escrita e Leitura.**
-```
+```js
 db.createRole({
     role: "grantRolesToUser",
     privileges: [{
@@ -1071,18 +1071,18 @@ db.createRole({
 db.grantRolesToUser("lucasWrite", [ "grantRolesToUser", "revokeRole" ]);
 ```
 **4. Remover o papel grantRolesToUser para o usuário com Escrita e Leitura.**
-```
-   db.runCommand({
-        revokeRolesFromUser: "lucasWrite",
-        roles: [ "grantRolesToUser" ]
-    });
+```js
+db.runCommand({
+     revokeRolesFromUser: "lucasWrite",
+     roles: [ "grantRolesToUser" ]
+ });
 {
   "ok": 1
 }
 
 ```
 **5. Listar todos os usuários com seus papéis e ações.**
-```
+```js
 db.runCommand({
      usersInfo: [
          { user: "lucas", db: "admin" },
@@ -1096,7 +1096,7 @@ db.runCommand({
 ## **Cluster**
 
 ###**1 Config Server**
-```
+```js
 lucas@lucas-pc:~$ sudo mongod --configsvr --port 27011
 2016-03-05T12:06:10.204-0300 I CONTROL  [initandlisten] MongoDB starting : pid=31284 port=27011 dbpath=/data/configdb master=1 64-bit host=lucas-pc
 2016-03-05T12:06:10.204-0300 I CONTROL  [initandlisten] db version v3.2.3
@@ -1129,7 +1129,7 @@ lucas@lucas-pc:~$ sudo mongod --configsvr --port 27011
 
 ```
 ###**1 Router**
-```
+```js
 lucas@lucas-pc:~$ mongos --configdb localhost:27011 --port 27012
 2016-03-05T12:06:36.584-0300 W SHARDING [main] Running a sharded cluster with fewer than 3 config servers should only be done for testing purposes and is not recommended for production.
 2016-03-05T12:06:36.588-0300 I SHARDING [mongosMain] MongoS version 3.2.3 starting: pid=31356 port=27012 64-bit host=lucas-pc (--help for usage)
@@ -1161,7 +1161,7 @@ lucas@lucas-pc:~$ mongos --configdb localhost:27011 --port 27012
 lucas@lucas-pc:~$ mkdir /data/shard1 && mkdir /data/shard2 && mkdir /data/shard3
 ```
 ###**Shard1**
-```
+```js
 lucas@lucas-pc:~$ sudo mongod --port 27013 --dbpath /data/shard1
 2016-03-05T12:07:44.604-0300 I CONTROL  [initandlisten] MongoDB starting : pid=31524 port=27013 dbpath=/data/shard1 64-bit host=lucas-pc
 2016-03-05T12:07:44.604-0300 I CONTROL  [initandlisten] db version v3.2.3
@@ -1189,7 +1189,7 @@ lucas@lucas-pc:~$ sudo mongod --port 27013 --dbpath /data/shard1
 2016-03-05T12:07:44.716-0300 I NETWORK  [initandlisten] waiting for connections on port 27013
 ```
 ####**Shard2**
-```
+```js
 lucas@lucas-pc:~$ sudo mongod --port 27014 --dbpath /data/shard2
 [sudo] password for lucas: 
 2016-03-05T12:08:29.809-0300 I CONTROL  [initandlisten] MongoDB starting : pid=31992 port=27014 dbpath=/data/shard2 64-bit host=lucas-pc
@@ -1220,7 +1220,7 @@ lucas@lucas-pc:~$ sudo mongod --port 27014 --dbpath /data/shard2
 
 ```
 ####**Shard3**
-```
+```js
 lucas@lucas-pc:~$ sudo mongod --port 27015 --dbpath /data/shard3
 [sudo] password for lucas: 
 2016-03-05T12:08:59.824-0300 I CONTROL  [initandlisten] MongoDB starting : pid=32405 port=27015 dbpath=/data/shard3 64-bit host=lucas-pc
@@ -1250,7 +1250,7 @@ lucas@lucas-pc:~$ sudo mongod --port 27015 --dbpath /data/shard3
 
 ```
 **Registrar Shards no Router**
-```
+```js
 lucas@lucas-pc:~$ mongo --port 27012 --host localhost
 MongoDB shell version: 3.2.3
 connecting to: localhost:27012/test
@@ -1291,7 +1291,7 @@ lucas@lucas-pc:~$ mkdir /data/rs1 && mkdir /data/rs2 && mkdir /data/rs3
 ```
 
 ### **Replica 1**
-```
+```js
 lucas@lucas-pc:~$ sudo mongod --replSet replica_set --port 27030 --dbpath /data/rs1
 [sudo] password for lucas: 
 2016-03-05T12:13:56.813-0300 I CONTROL  [initandlisten] MongoDB starting : pid=1121 port=27030 dbpath=/data/rs1 64-bit host=lucas-pc
@@ -1324,7 +1324,7 @@ lucas@lucas-pc:~$ sudo mongod --replSet replica_set --port 27030 --dbpath /data/
 ```
 
 ### **Replica 2**
-```
+```js
 lucas@lucas-pc:~$ sudo mongod --replSet replica_set --port 27031 --dbpath /data/rs2
 [sudo] password for lucas: 
 2016-03-05T12:15:27.678-0300 I CONTROL  [initandlisten] MongoDB starting : pid=1761 port=27031 dbpath=/data/rs2 64-bit host=lucas-pc
@@ -1357,7 +1357,7 @@ lucas@lucas-pc:~$ sudo mongod --replSet replica_set --port 27031 --dbpath /data/
 ```
 
 ### **Replica 3**
-```
+```js
 lucas@lucas-pc:~$ sudo mongod --replSet replica_set --port 27032 --dbpath /data/rs3
 [sudo] password for lucas: 
 2016-03-05T12:15:47.150-0300 I CONTROL  [initandlisten] MongoDB starting : pid=2326 port=27032 dbpath=/data/rs3 64-bit host=lucas-pc
@@ -1390,7 +1390,7 @@ lucas@lucas-pc:~$ sudo mongod --replSet replica_set --port 27032 --dbpath /data/
 ```
 
 ### **Config**
-```
+```js
 lucas@lucas-pc:~$ mongo --port 27030
 
  var rsconf = {
