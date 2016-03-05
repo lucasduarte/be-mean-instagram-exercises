@@ -22,7 +22,7 @@ users = {
 		"hash-token": String
 	}	
 }
-```js
+```
 ## Qual a modelagem da sua coleção de `projects`?
 ```js
 projects = {
@@ -64,7 +64,7 @@ projects = {
 		}
 	]
 }
-```js
+```
 
 ## Qual a modelagem da sua coleção retirada de `projects`?
 ```js
@@ -109,7 +109,7 @@ activity = {
 		}
 	]
 }
-```js
+```
 
 ## Create - cadastro
 **1. Cadastre 10 usuários diferentes**
@@ -137,7 +137,7 @@ Inserted 1 record(s) in 1ms
 Inserted 1 record(s) in 1ms
 Inserted 1 record(s) in 1ms
 
-```js
+```
 **2. Cadastre 5 projetos diferentes**
 ```js
 //Cadastrando primeiramente as activities
@@ -261,7 +261,7 @@ var project = {
 }
 db.projects.insert(project);
 Inserted 1 record(s) in 1ms
-```js
+```
 
 ## Retrieve - busca
 **1. Liste as informações dos membros de 1 projeto específico que deve ser buscado pelo seu nome de forma a não ligar para maiúsculas e minúsculas.**
@@ -320,7 +320,7 @@ be-mean> db.projects.find({name: /project0/i}, {members: 1} );
 }
 Fetched 1 record(s) in 2ms
 
-```js
+```
 **2. Liste todos os projetos com a tag que você escolheu para os 3 projetos em comum.**
 ```js
 be-mean> db.projects.find({tags: { $eq: 'Tag2' } })
@@ -644,10 +644,10 @@ be-mean> db.projects.find({tags: { $eq: 'Tag2' } })
   ]
 }
 Fetched 3 record(s) in 6ms
-```js
+```
 
 **3. Liste apenas os nomes de todas as atividades para todos os projetos.**
-```js
+```
 be-mean> db.projects.find({}, {"goals.activities": 1})
 {
   "_id": ObjectId("56d8cc1ff8b6cd6dd0bf7ea2"),
@@ -830,15 +830,15 @@ be-mean> db.projects.find({}, {"goals.activities": 1})
   ]
 }
 Fetched 5 record(s) in 4ms
-```js
+```
 
 **4. Liste todos os projetos que não possuam uma tag.**
-```js
+```
 be-mean> db.projects.find({ tags: [] })
-```js
+```
 
 **5. Liste todos os usuários que não fazem parte do primeiro projeto cadastrado.**
-```js
+```
 be-mean> var users = db.projects.find({name: /Project0/}, {"members._id": 1, _id: 0})
 be-mean> db.users.find({ _id: { $not: { $in: users } } })
 {
@@ -883,12 +883,12 @@ be-mean> db.users.find({ _id: { $not: { $in: users } } })
 }
 Fetched 5 record(s) in 1ms
 
-```js
+```
 
 ## Update - alteração
 
 **1. Adicione para todos os projetos o campo views: 0.**
-```js
+```
 be-mean> db.projects.update({}, { $set: {views: 0} }, { multi: true} )
 Updated 5 existing record(s) in 1ms
 WriteResult({
@@ -897,9 +897,9 @@ WriteResult({
   "nModified": 5
 })
 
-```js
+```
 **2. Adicione 1 tag diferente para cada projeto.**
-```js
+```
 var number = 0;
 var projects = db.projects.find();
 projects.forEach(function(project){
@@ -912,9 +912,9 @@ Updated 1 existing record(s) in 0ms
 Updated 1 existing record(s) in 0ms
 Updated 1 existing record(s) in 1ms
 Updated 1 existing record(s) in 1ms
-```js
+```
 **3. Adicione 2 membros diferentes para cada projeto.**
-```js
+```
 var projects = db.projects.find();
 projects.forEach(function(project){
     var query = { "_id": project._id} ;
@@ -928,9 +928,9 @@ Updated 1 existing record(s) in 1ms
 Updated 1 existing record(s) in 2ms
 Updated 1 existing record(s) in 1ms
 
-```js
+```
 **4. Adicione 1 comentário em cada atividade, deixe apenas 1 projeto sem.**
-```js
+```
 var activities = db.activities.find()
 
 activities.forEach(function(activity){
@@ -939,9 +939,9 @@ activities.forEach(function(activity){
     
     db.activities.update(query,mod);
 })
-```js
+```
 **5. Adicione 1 projeto inteiro com UPSERT.**
-```js
+```
 var project = {
     	"name": "New Project",
     	"description": "Description",
@@ -979,16 +979,16 @@ WriteResult({
   "_id": ObjectId("56dae0552a0c75d7ed9d04fd")
 })
 
-```js
+```
 
 ## Delete - remoção
 
 **1. Apague todos os projetos que não possuam tags.**
-```js
+```
 db.project.remove({"tags" : {$size : 0}})
-```js
+```
 **2. Apague todos os projetos que não possuam comentários nas atividades.**
-```js
+```
 var query = {
         $or: [{
             comments: { $eq: [ ] }
@@ -1003,9 +1003,9 @@ db.activities.find(query, { _id: 1 }).forEach(function(activity) {
 db.activities.remove({ _id: { $in: ids } });
 
 db.projects.remove({ "goals.activities.activity_id": { $in: ids } });
-```js
+```
 **3. Apague todos os projetos que não possuam atividades.**
-```js
+```
 be-mean> var query = { "goals.activities": { $size: 0 } } 
 be-mean> db.projects.remove(query)
 Removed 1 record(s) in 0ms
@@ -1013,21 +1013,21 @@ WriteResult({
   "nRemoved": 1
 })
 
-```js
+```
 **4. Escolha 2 usuários e apague todos os projetos em que os 2 fazem parte.**
-```js
+```
 var users = db.user.find()
 db.project.remove({$and : [{"members.user_id" : users[0]._id},{"members.user_id" : users[1]._id}]})
-```js
+```
 **5. Apague todos os projetos que possuam uma determinada tag em goal.**
-```js
+```
 db.project.remove({"goals.tags" : {$eq : "Tag1"}})
-```js
+```
 
 ## Gerenciamento de usuários
 
 **1. Crie um usuário com permissões APENAS de Leitura.**
-```js
+```
 be-mean> db.createUser({user: "lucas", pwd: "secret", roles: ["read"]})
 Successfully added user: {
   "user": "lucas",
@@ -1036,9 +1036,9 @@ Successfully added user: {
   ]
 }
 
-```js
+```
 **2. Crie um usuário com permissões de Escrita e Leitura.**
-```js
+```
 be-mean> db.createUser({user: "lucasWrite", pwd: "secret", roles: ["readWrite"]}) 
 Successfully added user: {
   "user": "lucasWrite",
@@ -1047,9 +1047,9 @@ Successfully added user: {
   ]
 }
 
-```js
+```
 **3. Adicionar o papel grantRolesToUser e revokeRole para o usuário com Escrita e Leitura.**
-```js
+```
 db.createRole({
     role: "grantRolesToUser",
     privileges: [{
@@ -1069,9 +1069,9 @@ db.createRole({
 })
 
 db.grantRolesToUser("lucasWrite", [ "grantRolesToUser", "revokeRole" ]);
-```js
+```
 **4. Remover o papel grantRolesToUser para o usuário com Escrita e Leitura.**
-```js
+```
    db.runCommand({
         revokeRolesFromUser: "lucasWrite",
         roles: [ "grantRolesToUser" ]
@@ -1080,9 +1080,9 @@ db.grantRolesToUser("lucasWrite", [ "grantRolesToUser", "revokeRole" ]);
   "ok": 1
 }
 
-```js
+```
 **5. Listar todos os usuários com seus papéis e ações.**
-```js
+```
 db.runCommand({
      usersInfo: [
          { user: "lucas", db: "admin" },
@@ -1091,12 +1091,12 @@ db.runCommand({
      showCredentials: true,
      showPrivileges: true
  });
-```js
+```
 
 ## **Cluster**
 
 ###**1 Config Server**
-```js
+```
 lucas@lucas-pc:~$ sudo mongod --configsvr --port 27011
 2016-03-05T12:06:10.204-0300 I CONTROL  [initandlisten] MongoDB starting : pid=31284 port=27011 dbpath=/data/configdb master=1 64-bit host=lucas-pc
 2016-03-05T12:06:10.204-0300 I CONTROL  [initandlisten] db version v3.2.3
@@ -1127,9 +1127,9 @@ lucas@lucas-pc:~$ sudo mongod --configsvr --port 27011
 2016-03-05T12:06:10.520-0300 I NETWORK  [HostnameCanonicalizationWorker] Starting hostname canonicalization worker
 2016-03-05T12:06:10.520-0300 I NETWORK  [initandlisten] waiting for connections on port 27011
 
-```js
+```
 ###**1 Router**
-```js
+```
 lucas@lucas-pc:~$ mongos --configdb localhost:27011 --port 27012
 2016-03-05T12:06:36.584-0300 W SHARDING [main] Running a sharded cluster with fewer than 3 config servers should only be done for testing purposes and is not recommended for production.
 2016-03-05T12:06:36.588-0300 I SHARDING [mongosMain] MongoS version 3.2.3 starting: pid=31356 port=27012 64-bit host=lucas-pc (--help for usage)
@@ -1155,13 +1155,13 @@ lucas@lucas-pc:~$ mongos --configdb localhost:27011 --port 27012
 2016-03-05T12:06:36.607-0300 I SHARDING [Balancer] distributed lock 'balancer/lucas-pc:27012:1457190396:-699966356' unlocked. 
 2016-03-05T12:06:36.626-0300 I NETWORK  [mongosMain] waiting for connections on port 27012
 
-```js
+```
 ##**3 Shardings**
-```js
+```
 lucas@lucas-pc:~$ mkdir /data/shard1 && mkdir /data/shard2 && mkdir /data/shard3
-```js
+```
 ###**Shard1**
-```js
+```
 lucas@lucas-pc:~$ sudo mongod --port 27013 --dbpath /data/shard1
 2016-03-05T12:07:44.604-0300 I CONTROL  [initandlisten] MongoDB starting : pid=31524 port=27013 dbpath=/data/shard1 64-bit host=lucas-pc
 2016-03-05T12:07:44.604-0300 I CONTROL  [initandlisten] db version v3.2.3
@@ -1187,9 +1187,9 @@ lucas@lucas-pc:~$ sudo mongod --port 27013 --dbpath /data/shard1
 2016-03-05T12:07:44.702-0300 I FTDC     [initandlisten] Initializing full-time diagnostic data capture with directory '/data/shard1/diagnostic.data'
 2016-03-05T12:07:44.702-0300 I NETWORK  [HostnameCanonicalizationWorker] Starting hostname canonicalization worker
 2016-03-05T12:07:44.716-0300 I NETWORK  [initandlisten] waiting for connections on port 27013
-```js
+```
 ####**Shard2**
-```js
+```
 lucas@lucas-pc:~$ sudo mongod --port 27014 --dbpath /data/shard2
 [sudo] password for lucas: 
 2016-03-05T12:08:29.809-0300 I CONTROL  [initandlisten] MongoDB starting : pid=31992 port=27014 dbpath=/data/shard2 64-bit host=lucas-pc
@@ -1218,9 +1218,9 @@ lucas@lucas-pc:~$ sudo mongod --port 27014 --dbpath /data/shard2
 2016-03-05T12:08:29.921-0300 I NETWORK  [initandlisten] waiting for connections on port 27014
 
 
-```js
+```
 ####**Shard3**
-```js
+```
 lucas@lucas-pc:~$ sudo mongod --port 27015 --dbpath /data/shard3
 [sudo] password for lucas: 
 2016-03-05T12:08:59.824-0300 I CONTROL  [initandlisten] MongoDB starting : pid=32405 port=27015 dbpath=/data/shard3 64-bit host=lucas-pc
@@ -1248,9 +1248,9 @@ lucas@lucas-pc:~$ sudo mongod --port 27015 --dbpath /data/shard3
 2016-03-05T12:08:59.923-0300 I NETWORK  [HostnameCanonicalizationWorker] Starting hostname canonicalization worker
 2016-03-05T12:08:59.937-0300 I NETWORK  [initandlisten] waiting for connections on port 27015
 
-```js
+```
 **Registrar Shards no Router**
-```js
+```
 lucas@lucas-pc:~$ mongo --port 27012 --host localhost
 MongoDB shell version: 3.2.3
 connecting to: localhost:27012/test
@@ -1283,15 +1283,15 @@ lucas-pc:27012(mongos-3.2.3)[mongos] test> sh.shardCollection("be-mean.projects"
   "ok": 1
 }
 
-```js
+```
 
 ## **Replica**
-```js
+```
 lucas@lucas-pc:~$ mkdir /data/rs1 && mkdir /data/rs2 && mkdir /data/rs3
-```js
+```
 
 ### **Replica 1**
-```js
+```
 lucas@lucas-pc:~$ sudo mongod --replSet replica_set --port 27030 --dbpath /data/rs1
 [sudo] password for lucas: 
 2016-03-05T12:13:56.813-0300 I CONTROL  [initandlisten] MongoDB starting : pid=1121 port=27030 dbpath=/data/rs1 64-bit host=lucas-pc
@@ -1321,10 +1321,10 @@ lucas@lucas-pc:~$ sudo mongod --replSet replica_set --port 27030 --dbpath /data/
 2016-03-05T12:13:56.926-0300 I FTDC     [initandlisten] Initializing full-time diagnostic data capture with directory '/data/rs1/diagnostic.data'
 2016-03-05T12:13:56.943-0300 I NETWORK  [initandlisten] waiting for connections on port 27030
 
-```js
+```
 
 ### **Replica 2**
-```js
+```
 lucas@lucas-pc:~$ sudo mongod --replSet replica_set --port 27031 --dbpath /data/rs2
 [sudo] password for lucas: 
 2016-03-05T12:15:27.678-0300 I CONTROL  [initandlisten] MongoDB starting : pid=1761 port=27031 dbpath=/data/rs2 64-bit host=lucas-pc
@@ -1354,10 +1354,10 @@ lucas@lucas-pc:~$ sudo mongod --replSet replica_set --port 27031 --dbpath /data/
 2016-03-05T12:15:27.794-0300 I FTDC     [initandlisten] Initializing full-time diagnostic data capture with directory '/data/rs2/diagnostic.data'
 2016-03-05T12:15:27.808-0300 I NETWORK  [initandlisten] waiting for connections on port 27031
 
-```js
+```
 
 ### **Replica 3**
-```js
+```
 lucas@lucas-pc:~$ sudo mongod --replSet replica_set --port 27032 --dbpath /data/rs3
 [sudo] password for lucas: 
 2016-03-05T12:15:47.150-0300 I CONTROL  [initandlisten] MongoDB starting : pid=2326 port=27032 dbpath=/data/rs3 64-bit host=lucas-pc
@@ -1387,10 +1387,10 @@ lucas@lucas-pc:~$ sudo mongod --replSet replica_set --port 27032 --dbpath /data/
 2016-03-05T12:15:47.268-0300 I NETWORK  [HostnameCanonicalizationWorker] Starting hostname canonicalization worker
 2016-03-05T12:15:47.289-0300 I NETWORK  [initandlisten] waiting for connections on port 27032
 
-```js
+```
 
 ### **Config**
-```js
+```
 lucas@lucas-pc:~$ mongo --port 27030
 
  var rsconf = {
@@ -1416,4 +1416,4 @@ lucas-pc:27030(mongod-3.2.3)[PRIMARY:replica_set] test> rs.add("127.0.0.1:27032"
   "ok": 1
 }
 
-```js
+```
