@@ -931,10 +931,53 @@ Updated 1 existing record(s) in 1ms
 ```
 **4. Adicione 1 comentário em cada atividade, deixe apenas 1 projeto sem.**
 ```
+var activities = db.activities.find()
 
+activities.forEach(function(activity){
+    var query = activity._id;
+    var mod = {$push : {"comments" : {'text' : 'Comment', date_comment : new Date()}}}
+    
+    db.activities.update(query,mod);
+})
 ```
 **5. Adicione 1 projeto inteiro com UPSERT.**
 ```
+var project = {
+    	"name": "New Project",
+    	"description": "Description",
+    	"date-begin": new Date(),
+    	"date-dream": new Date(),
+    	"date-end": new Date(),
+    	"visible": true,
+    	"realocate": false,
+    	"expired": new Date(),
+    	"visualizable_mod": "Teste",
+    	"tags": [],
+    	"members": [ ],
+    	"historic": [ ],
+    	"goals": [{
+			"name": "goal",
+			"description": "description",
+			"date_begin": new Date(),
+			"date_dream": new Date(),
+			"date_end": new Date(),
+			"realocate": false,
+			"expired": new Date(),
+			"tags":["tag1", "tag2", "tag3"],
+			"activities": []	
+    	}]
+}
+
+var query = {}
+var opt = {upsert: true}
+be-mean> db.projects.update(project,query,opt)
+Updated 1 new record(s) in 3ms
+WriteResult({
+  "nMatched": 0,
+  "nUpserted": 1,
+  "nModified": 0,
+  "_id": ObjectId("56dae0552a0c75d7ed9d04fd")
+})
 
 ```
 
@@ -942,51 +985,435 @@ Updated 1 existing record(s) in 1ms
 
 **1. Apague todos os projetos que não possuam tags.**
 ```
-
+db.project.remove({"tags" : {$size : 0}})
 ```
 **2. Apague todos os projetos que não possuam comentários nas atividades.**
 ```
+var query = {
+        $or: [{
+            comments: { $eq: [ ] }
+        }]
+    };
 
+var ids = [];
+db.activities.find(query, { _id: 1 }).forEach(function(activity) {
+    ids.push(activity._id);
+});
+
+db.activities.remove({ _id: { $in: ids } });
+
+db.projects.remove({ "goals.activities.activity_id": { $in: ids } });
 ```
 **3. Apague todos os projetos que não possuam atividades.**
 ```
+be-mean> var query = { "goals.activities": { $size: 0 } } 
+be-mean> db.projects.remove(query)
+Removed 1 record(s) in 0ms
+WriteResult({
+  "nRemoved": 1
+})
 
 ```
-**4. Escolha 2 usuário e apague todos os projetos em que os 2 fazem parte.**
+**4. Escolha 2 usuários e apague todos os projetos em que os 2 fazem parte.**
 ```
-
+var users = db.user.find()
+db.project.remove({$and : [{"members.user_id" : users[0]._id},{"members.user_id" : users[1]._id}]})
 ```
 **5. Apague todos os projetos que possuam uma determinada tag em goal.**
 ```
-
+db.project.remove({"goals.tags" : {$eq : "Tag1"}})
 ```
 
 ## Gerenciamento de usuários
 
 **1. Crie um usuário com permissões APENAS de Leitura.**
 ```
+be-mean> db.createUser({user: "lucas", pwd: "secret", roles: ["read"]})
+Successfully added user: {
+  "user": "lucas",
+  "roles": [
+    "read"
+  ]
+}
 
 ```
 **2. Crie um usuário com permissões de Escrita e Leitura.**
 ```
+be-mean> db.createUser({user: "lucasWrite", pwd: "secret", roles: ["readWrite"]}) 
+Successfully added user: {
+  "user": "lucasWrite",
+  "roles": [
+    "readWrite"
+  ]
+}
 
 ```
 **3. Adicionar o papel grantRolesToUser e revokeRole para o usuário com Escrita e Leitura.**
 ```
+db.createRole({
+    role: "grantRolesToUser",
+    privileges: [{
+        resource: { db: "admin", collection: "" },
+        actions: [ "grantRole" ]
+    }],
+    roles: []
+})
 
+db.createRole({
+    role: "revokeRole",
+    privileges: [{
+        resource: { db: "admin", collection: "" },
+        actions: [ "grantRole" ]
+    }],
+    roles: []
+})
+
+db.grantRolesToUser("lucasWrite", [ "grantRolesToUser", "revokeRole" ]);
 ```
 **4. Remover o papel grantRolesToUser para o usuário com Escrita e Leitura.**
 ```
+   db.runCommand({
+        revokeRolesFromUser: "lucasWrite",
+        roles: [ "grantRolesToUser" ]
+    });
+{
+  "ok": 1
+}
 
 ```
 **5. Listar todos os usuários com seus papéis e ações.**
 ```
+db.runCommand({
+     usersInfo: [
+         { user: "lucas", db: "admin" },
+         { user: "lucasWrite", db: "admin" }
+     ],
+     showCredentials: true,
+     showPrivileges: true
+ });
+```
+
+## **Cluster**
+
+###**1 Config Server**
+```
+lucas@lucas-pc:~$ sudo mongod --configsvr --port 27011
+2016-03-05T12:06:10.204-0300 I CONTROL  [initandlisten] MongoDB starting : pid=31284 port=27011 dbpath=/data/configdb master=1 64-bit host=lucas-pc
+2016-03-05T12:06:10.204-0300 I CONTROL  [initandlisten] db version v3.2.3
+2016-03-05T12:06:10.204-0300 I CONTROL  [initandlisten] git version: b326ba837cf6f49d65c2f85e1b70f6f31ece7937
+2016-03-05T12:06:10.204-0300 I CONTROL  [initandlisten] OpenSSL version: OpenSSL 1.0.2d 9 Jul 2015
+2016-03-05T12:06:10.204-0300 I CONTROL  [initandlisten] allocator: tcmalloc
+2016-03-05T12:06:10.204-0300 I CONTROL  [initandlisten] modules: none
+2016-03-05T12:06:10.204-0300 I CONTROL  [initandlisten] build environment:
+2016-03-05T12:06:10.204-0300 I CONTROL  [initandlisten]     distmod: ubuntu1404
+2016-03-05T12:06:10.204-0300 I CONTROL  [initandlisten]     distarch: x86_64
+2016-03-05T12:06:10.204-0300 I CONTROL  [initandlisten]     target_arch: x86_64
+2016-03-05T12:06:10.204-0300 I CONTROL  [initandlisten] options: { net: { port: 27011 }, sharding: { clusterRole: "configsvr" } }
+2016-03-05T12:06:10.230-0300 I -        [initandlisten] Detected data files in /data/configdb created by the 'wiredTiger' storage engine, so setting the active storage engine to 'wiredTiger'.
+2016-03-05T12:06:10.230-0300 I STORAGE  [initandlisten] wiredtiger_open config: create,cache_size=4G,session_max=20000,eviction=(threads_max=4),config_base=false,statistics=(fast),log=(enabled=true,archive=true,path=journal,compressor=snappy),file_manager=(close_idle_time=100000),checkpoint=(wait=60,log_size=2GB),statistics_log=(wait=0),
+2016-03-05T12:06:10.495-0300 I STORAGE  [initandlisten] Starting WiredTigerRecordStoreThread local.oplog.$main
+2016-03-05T12:06:10.495-0300 I STORAGE  [initandlisten] The size storer reports that the oplog contains 63 records totaling to 9757 bytes
+2016-03-05T12:06:10.495-0300 I STORAGE  [initandlisten] Scanning the oplog to determine where to place markers for truncation
+2016-03-05T12:06:10.515-0300 I CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
+2016-03-05T12:06:10.515-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:06:10.515-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:06:10.515-0300 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/enabled is 'always'.
+2016-03-05T12:06:10.515-0300 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+2016-03-05T12:06:10.516-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:06:10.516-0300 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/defrag is 'always'.
+2016-03-05T12:06:10.516-0300 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+2016-03-05T12:06:10.516-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:06:10.520-0300 I FTDC     [initandlisten] Initializing full-time diagnostic data capture with directory '/data/configdb/diagnostic.data'
+2016-03-05T12:06:10.520-0300 I NETWORK  [HostnameCanonicalizationWorker] Starting hostname canonicalization worker
+2016-03-05T12:06:10.520-0300 I NETWORK  [initandlisten] waiting for connections on port 27011
+
+```
+###**1 Router**
+```
+lucas@lucas-pc:~$ mongos --configdb localhost:27011 --port 27012
+2016-03-05T12:06:36.584-0300 W SHARDING [main] Running a sharded cluster with fewer than 3 config servers should only be done for testing purposes and is not recommended for production.
+2016-03-05T12:06:36.588-0300 I SHARDING [mongosMain] MongoS version 3.2.3 starting: pid=31356 port=27012 64-bit host=lucas-pc (--help for usage)
+2016-03-05T12:06:36.588-0300 I CONTROL  [mongosMain] db version v3.2.3
+2016-03-05T12:06:36.588-0300 I CONTROL  [mongosMain] git version: b326ba837cf6f49d65c2f85e1b70f6f31ece7937
+2016-03-05T12:06:36.588-0300 I CONTROL  [mongosMain] OpenSSL version: OpenSSL 1.0.2d 9 Jul 2015
+2016-03-05T12:06:36.588-0300 I CONTROL  [mongosMain] allocator: tcmalloc
+2016-03-05T12:06:36.588-0300 I CONTROL  [mongosMain] modules: none
+2016-03-05T12:06:36.588-0300 I CONTROL  [mongosMain] build environment:
+2016-03-05T12:06:36.588-0300 I CONTROL  [mongosMain]     distmod: ubuntu1404
+2016-03-05T12:06:36.588-0300 I CONTROL  [mongosMain]     distarch: x86_64
+2016-03-05T12:06:36.588-0300 I CONTROL  [mongosMain]     target_arch: x86_64
+2016-03-05T12:06:36.588-0300 I CONTROL  [mongosMain] options: { net: { port: 27012 }, sharding: { configDB: "localhost:27011" } }
+2016-03-05T12:06:36.589-0300 I SHARDING [mongosMain] Updating config server connection string to: localhost:27011
+2016-03-05T12:06:36.592-0300 I SHARDING [LockPinger] creating distributed lock ping thread for localhost:27011 and process lucas-pc:27012:1457190396:-699966356 (sleeping for 30000ms)
+2016-03-05T12:06:36.593-0300 I SHARDING [LockPinger] cluster localhost:27011 pinged successfully at 2016-03-05T12:06:36.592-0300 by distributed lock pinger 'localhost:27011/lucas-pc:27012:1457190396:-699966356', sleeping for 30000ms
+2016-03-05T12:06:36.599-0300 I NETWORK  [HostnameCanonicalizationWorker] Starting hostname canonicalization worker
+2016-03-05T12:06:36.599-0300 I SHARDING [Balancer] about to contact config servers and shards
+2016-03-05T12:06:36.599-0300 I SHARDING [Balancer] config servers and shards contacted successfully
+2016-03-05T12:06:36.599-0300 I SHARDING [Balancer] balancer id: lucas-pc:27012 started
+2016-03-05T12:06:36.603-0300 I SHARDING [Balancer] distributed lock 'balancer/lucas-pc:27012:1457190396:-699966356' acquired for 'doing balance round', ts : 56daf5fcbc6cfb9eca13c877
+2016-03-05T12:06:36.604-0300 I SHARDING [Balancer] about to log metadata event into actionlog: { _id: "lucas-pc-2016-03-05T12:06:36.604-0300-56daf5fcbc6cfb9eca13c878", server: "lucas-pc", clientAddr: "", time: new Date(1457190396604), what: "balancer.round", ns: "", details: { executionTimeMillis: 4, errorOccured: false, candidateChunks: 0, chunksMoved: 0 } }
+2016-03-05T12:06:36.607-0300 I SHARDING [Balancer] distributed lock 'balancer/lucas-pc:27012:1457190396:-699966356' unlocked. 
+2016-03-05T12:06:36.626-0300 I NETWORK  [mongosMain] waiting for connections on port 27012
+
+```
+##**3 Shardings**
+```
+lucas@lucas-pc:~$ mkdir /data/shard1 && mkdir /data/shard2 && mkdir /data/shard3
+```
+###**Shard1**
+```
+lucas@lucas-pc:~$ sudo mongod --port 27013 --dbpath /data/shard1
+2016-03-05T12:07:44.604-0300 I CONTROL  [initandlisten] MongoDB starting : pid=31524 port=27013 dbpath=/data/shard1 64-bit host=lucas-pc
+2016-03-05T12:07:44.604-0300 I CONTROL  [initandlisten] db version v3.2.3
+2016-03-05T12:07:44.604-0300 I CONTROL  [initandlisten] git version: b326ba837cf6f49d65c2f85e1b70f6f31ece7937
+2016-03-05T12:07:44.604-0300 I CONTROL  [initandlisten] OpenSSL version: OpenSSL 1.0.2d 9 Jul 2015
+2016-03-05T12:07:44.604-0300 I CONTROL  [initandlisten] allocator: tcmalloc
+2016-03-05T12:07:44.604-0300 I CONTROL  [initandlisten] modules: none
+2016-03-05T12:07:44.604-0300 I CONTROL  [initandlisten] build environment:
+2016-03-05T12:07:44.604-0300 I CONTROL  [initandlisten]     distmod: ubuntu1404
+2016-03-05T12:07:44.604-0300 I CONTROL  [initandlisten]     distarch: x86_64
+2016-03-05T12:07:44.604-0300 I CONTROL  [initandlisten]     target_arch: x86_64
+2016-03-05T12:07:44.604-0300 I CONTROL  [initandlisten] options: { net: { port: 27013 }, storage: { dbPath: "/data/shard1" } }
+2016-03-05T12:07:44.630-0300 I STORAGE  [initandlisten] wiredtiger_open config: create,cache_size=4G,session_max=20000,eviction=(threads_max=4),config_base=false,statistics=(fast),log=(enabled=true,archive=true,path=journal,compressor=snappy),file_manager=(close_idle_time=100000),checkpoint=(wait=60,log_size=2GB),statistics_log=(wait=0),
+2016-03-05T12:07:44.701-0300 I CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
+2016-03-05T12:07:44.701-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:07:44.701-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:07:44.701-0300 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/enabled is 'always'.
+2016-03-05T12:07:44.701-0300 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+2016-03-05T12:07:44.701-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:07:44.701-0300 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/defrag is 'always'.
+2016-03-05T12:07:44.701-0300 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+2016-03-05T12:07:44.701-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:07:44.702-0300 I FTDC     [initandlisten] Initializing full-time diagnostic data capture with directory '/data/shard1/diagnostic.data'
+2016-03-05T12:07:44.702-0300 I NETWORK  [HostnameCanonicalizationWorker] Starting hostname canonicalization worker
+2016-03-05T12:07:44.716-0300 I NETWORK  [initandlisten] waiting for connections on port 27013
+```
+####**Shard2**
+```
+lucas@lucas-pc:~$ sudo mongod --port 27014 --dbpath /data/shard2
+[sudo] password for lucas: 
+2016-03-05T12:08:29.809-0300 I CONTROL  [initandlisten] MongoDB starting : pid=31992 port=27014 dbpath=/data/shard2 64-bit host=lucas-pc
+2016-03-05T12:08:29.809-0300 I CONTROL  [initandlisten] db version v3.2.3
+2016-03-05T12:08:29.809-0300 I CONTROL  [initandlisten] git version: b326ba837cf6f49d65c2f85e1b70f6f31ece7937
+2016-03-05T12:08:29.809-0300 I CONTROL  [initandlisten] OpenSSL version: OpenSSL 1.0.2d 9 Jul 2015
+2016-03-05T12:08:29.809-0300 I CONTROL  [initandlisten] allocator: tcmalloc
+2016-03-05T12:08:29.809-0300 I CONTROL  [initandlisten] modules: none
+2016-03-05T12:08:29.809-0300 I CONTROL  [initandlisten] build environment:
+2016-03-05T12:08:29.809-0300 I CONTROL  [initandlisten]     distmod: ubuntu1404
+2016-03-05T12:08:29.809-0300 I CONTROL  [initandlisten]     distarch: x86_64
+2016-03-05T12:08:29.809-0300 I CONTROL  [initandlisten]     target_arch: x86_64
+2016-03-05T12:08:29.809-0300 I CONTROL  [initandlisten] options: { net: { port: 27014 }, storage: { dbPath: "/data/shard2" } }
+2016-03-05T12:08:29.835-0300 I STORAGE  [initandlisten] wiredtiger_open config: create,cache_size=4G,session_max=20000,eviction=(threads_max=4),config_base=false,statistics=(fast),log=(enabled=true,archive=true,path=journal,compressor=snappy),file_manager=(close_idle_time=100000),checkpoint=(wait=60,log_size=2GB),statistics_log=(wait=0),
+2016-03-05T12:08:29.906-0300 I CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
+2016-03-05T12:08:29.906-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:08:29.906-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:08:29.906-0300 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/enabled is 'always'.
+2016-03-05T12:08:29.907-0300 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+2016-03-05T12:08:29.907-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:08:29.907-0300 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/defrag is 'always'.
+2016-03-05T12:08:29.907-0300 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+2016-03-05T12:08:29.907-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:08:29.907-0300 I FTDC     [initandlisten] Initializing full-time diagnostic data capture with directory '/data/shard2/diagnostic.data'
+2016-03-05T12:08:29.907-0300 I NETWORK  [HostnameCanonicalizationWorker] Starting hostname canonicalization worker
+2016-03-05T12:08:29.921-0300 I NETWORK  [initandlisten] waiting for connections on port 27014
+
+
+```
+####**Shard3**
+```
+lucas@lucas-pc:~$ sudo mongod --port 27015 --dbpath /data/shard3
+[sudo] password for lucas: 
+2016-03-05T12:08:59.824-0300 I CONTROL  [initandlisten] MongoDB starting : pid=32405 port=27015 dbpath=/data/shard3 64-bit host=lucas-pc
+2016-03-05T12:08:59.824-0300 I CONTROL  [initandlisten] db version v3.2.3
+2016-03-05T12:08:59.824-0300 I CONTROL  [initandlisten] git version: b326ba837cf6f49d65c2f85e1b70f6f31ece7937
+2016-03-05T12:08:59.824-0300 I CONTROL  [initandlisten] OpenSSL version: OpenSSL 1.0.2d 9 Jul 2015
+2016-03-05T12:08:59.824-0300 I CONTROL  [initandlisten] allocator: tcmalloc
+2016-03-05T12:08:59.824-0300 I CONTROL  [initandlisten] modules: none
+2016-03-05T12:08:59.824-0300 I CONTROL  [initandlisten] build environment:
+2016-03-05T12:08:59.824-0300 I CONTROL  [initandlisten]     distmod: ubuntu1404
+2016-03-05T12:08:59.824-0300 I CONTROL  [initandlisten]     distarch: x86_64
+2016-03-05T12:08:59.824-0300 I CONTROL  [initandlisten]     target_arch: x86_64
+2016-03-05T12:08:59.824-0300 I CONTROL  [initandlisten] options: { net: { port: 27015 }, storage: { dbPath: "/data/shard3" } }
+2016-03-05T12:08:59.850-0300 I STORAGE  [initandlisten] wiredtiger_open config: create,cache_size=4G,session_max=20000,eviction=(threads_max=4),config_base=false,statistics=(fast),log=(enabled=true,archive=true,path=journal,compressor=snappy),file_manager=(close_idle_time=100000),checkpoint=(wait=60,log_size=2GB),statistics_log=(wait=0),
+2016-03-05T12:08:59.923-0300 I CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
+2016-03-05T12:08:59.923-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:08:59.923-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:08:59.923-0300 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/enabled is 'always'.
+2016-03-05T12:08:59.923-0300 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+2016-03-05T12:08:59.923-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:08:59.923-0300 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/defrag is 'always'.
+2016-03-05T12:08:59.923-0300 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+2016-03-05T12:08:59.923-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:08:59.923-0300 I FTDC     [initandlisten] Initializing full-time diagnostic data capture with directory '/data/shard3/diagnostic.data'
+2016-03-05T12:08:59.923-0300 I NETWORK  [HostnameCanonicalizationWorker] Starting hostname canonicalization worker
+2016-03-05T12:08:59.937-0300 I NETWORK  [initandlisten] waiting for connections on port 27015
+
+```
+**Registrar Shards no Router**
+```
+lucas@lucas-pc:~$ mongo --port 27012 --host localhost
+MongoDB shell version: 3.2.3
+connecting to: localhost:27012/test
+Mongo-Hacker 0.0.12
+lucas-pc:27012(mongos-3.2.3)[mongos] test> sh.addShard("localhost:27013")
+{
+  "shardAdded": "shard0000",
+  "ok": 1
+}
+lucas-pc:27012(mongos-3.2.3)[mongos] test> sh.addShard("localhost:27014")
+{
+  "shardAdded": "shard0001",
+  "ok": 1
+}
+lucas-pc:27012(mongos-3.2.3)[mongos] test> sh.addShard("localhost:27015")
+{
+  "shardAdded": "shard0002",
+  "ok": 1
+}
+
+
+test> sh.enableSharding("be-mean")
+{
+  "ok": 1
+}
+
+lucas-pc:27012(mongos-3.2.3)[mongos] test> sh.shardCollection("be-mean.projects", { "_id": 1 })
+{
+  "collectionsharded": "be-mean.projects",
+  "ok": 1
+}
 
 ```
 
-## Cluster
+## **Replica**
+```
+lucas@lucas-pc:~$ mkdir /data/rs1 && mkdir /data/rs2 && mkdir /data/rs3
+```
 
-1 Router
-1 Config Server
-3 Shardings
-3 Replicas
+### **Replica 1**
+```
+lucas@lucas-pc:~$ sudo mongod --replSet replica_set --port 27030 --dbpath /data/rs1
+[sudo] password for lucas: 
+2016-03-05T12:13:56.813-0300 I CONTROL  [initandlisten] MongoDB starting : pid=1121 port=27030 dbpath=/data/rs1 64-bit host=lucas-pc
+2016-03-05T12:13:56.813-0300 I CONTROL  [initandlisten] db version v3.2.3
+2016-03-05T12:13:56.813-0300 I CONTROL  [initandlisten] git version: b326ba837cf6f49d65c2f85e1b70f6f31ece7937
+2016-03-05T12:13:56.813-0300 I CONTROL  [initandlisten] OpenSSL version: OpenSSL 1.0.2d 9 Jul 2015
+2016-03-05T12:13:56.813-0300 I CONTROL  [initandlisten] allocator: tcmalloc
+2016-03-05T12:13:56.813-0300 I CONTROL  [initandlisten] modules: none
+2016-03-05T12:13:56.813-0300 I CONTROL  [initandlisten] build environment:
+2016-03-05T12:13:56.813-0300 I CONTROL  [initandlisten]     distmod: ubuntu1404
+2016-03-05T12:13:56.813-0300 I CONTROL  [initandlisten]     distarch: x86_64
+2016-03-05T12:13:56.813-0300 I CONTROL  [initandlisten]     target_arch: x86_64
+2016-03-05T12:13:56.813-0300 I CONTROL  [initandlisten] options: { net: { port: 27030 }, replication: { replSet: "replica_set" }, storage: { dbPath: "/data/rs1" } }
+2016-03-05T12:13:56.840-0300 I STORAGE  [initandlisten] wiredtiger_open config: create,cache_size=4G,session_max=20000,eviction=(threads_max=4),config_base=false,statistics=(fast),log=(enabled=true,archive=true,path=journal,compressor=snappy),file_manager=(close_idle_time=100000),checkpoint=(wait=60,log_size=2GB),statistics_log=(wait=0),
+2016-03-05T12:13:56.912-0300 I CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
+2016-03-05T12:13:56.912-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:13:56.912-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:13:56.912-0300 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/enabled is 'always'.
+2016-03-05T12:13:56.912-0300 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+2016-03-05T12:13:56.912-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:13:56.912-0300 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/defrag is 'always'.
+2016-03-05T12:13:56.912-0300 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+2016-03-05T12:13:56.912-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:13:56.926-0300 I REPL     [initandlisten] Did not find local voted for document at startup;  NoMatchingDocument: Did not find replica set lastVote document in local.replset.election
+2016-03-05T12:13:56.926-0300 I REPL     [initandlisten] Did not find local replica set configuration document at startup;  NoMatchingDocument: Did not find replica set configuration document in local.system.replset
+2016-03-05T12:13:56.926-0300 I NETWORK  [HostnameCanonicalizationWorker] Starting hostname canonicalization worker
+2016-03-05T12:13:56.926-0300 I FTDC     [initandlisten] Initializing full-time diagnostic data capture with directory '/data/rs1/diagnostic.data'
+2016-03-05T12:13:56.943-0300 I NETWORK  [initandlisten] waiting for connections on port 27030
+
+```
+
+### **Replica 2**
+```
+lucas@lucas-pc:~$ sudo mongod --replSet replica_set --port 27031 --dbpath /data/rs2
+[sudo] password for lucas: 
+2016-03-05T12:15:27.678-0300 I CONTROL  [initandlisten] MongoDB starting : pid=1761 port=27031 dbpath=/data/rs2 64-bit host=lucas-pc
+2016-03-05T12:15:27.678-0300 I CONTROL  [initandlisten] db version v3.2.3
+2016-03-05T12:15:27.678-0300 I CONTROL  [initandlisten] git version: b326ba837cf6f49d65c2f85e1b70f6f31ece7937
+2016-03-05T12:15:27.678-0300 I CONTROL  [initandlisten] OpenSSL version: OpenSSL 1.0.2d 9 Jul 2015
+2016-03-05T12:15:27.678-0300 I CONTROL  [initandlisten] allocator: tcmalloc
+2016-03-05T12:15:27.678-0300 I CONTROL  [initandlisten] modules: none
+2016-03-05T12:15:27.678-0300 I CONTROL  [initandlisten] build environment:
+2016-03-05T12:15:27.678-0300 I CONTROL  [initandlisten]     distmod: ubuntu1404
+2016-03-05T12:15:27.678-0300 I CONTROL  [initandlisten]     distarch: x86_64
+2016-03-05T12:15:27.678-0300 I CONTROL  [initandlisten]     target_arch: x86_64
+2016-03-05T12:15:27.678-0300 I CONTROL  [initandlisten] options: { net: { port: 27031 }, replication: { replSet: "replica_set" }, storage: { dbPath: "/data/rs2" } }
+2016-03-05T12:15:27.704-0300 I STORAGE  [initandlisten] wiredtiger_open config: create,cache_size=4G,session_max=20000,eviction=(threads_max=4),config_base=false,statistics=(fast),log=(enabled=true,archive=true,path=journal,compressor=snappy),file_manager=(close_idle_time=100000),checkpoint=(wait=60,log_size=2GB),statistics_log=(wait=0),
+2016-03-05T12:15:27.780-0300 I CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
+2016-03-05T12:15:27.780-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:15:27.780-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:15:27.780-0300 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/enabled is 'always'.
+2016-03-05T12:15:27.780-0300 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+2016-03-05T12:15:27.780-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:15:27.780-0300 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/defrag is 'always'.
+2016-03-05T12:15:27.780-0300 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+2016-03-05T12:15:27.780-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:15:27.794-0300 I REPL     [initandlisten] Did not find local voted for document at startup;  NoMatchingDocument: Did not find replica set lastVote document in local.replset.election
+2016-03-05T12:15:27.794-0300 I REPL     [initandlisten] Did not find local replica set configuration document at startup;  NoMatchingDocument: Did not find replica set configuration document in local.system.replset
+2016-03-05T12:15:27.794-0300 I NETWORK  [HostnameCanonicalizationWorker] Starting hostname canonicalization worker
+2016-03-05T12:15:27.794-0300 I FTDC     [initandlisten] Initializing full-time diagnostic data capture with directory '/data/rs2/diagnostic.data'
+2016-03-05T12:15:27.808-0300 I NETWORK  [initandlisten] waiting for connections on port 27031
+
+```
+
+### **Replica 3**
+```
+lucas@lucas-pc:~$ sudo mongod --replSet replica_set --port 27032 --dbpath /data/rs3
+[sudo] password for lucas: 
+2016-03-05T12:15:47.150-0300 I CONTROL  [initandlisten] MongoDB starting : pid=2326 port=27032 dbpath=/data/rs3 64-bit host=lucas-pc
+2016-03-05T12:15:47.150-0300 I CONTROL  [initandlisten] db version v3.2.3
+2016-03-05T12:15:47.150-0300 I CONTROL  [initandlisten] git version: b326ba837cf6f49d65c2f85e1b70f6f31ece7937
+2016-03-05T12:15:47.150-0300 I CONTROL  [initandlisten] OpenSSL version: OpenSSL 1.0.2d 9 Jul 2015
+2016-03-05T12:15:47.150-0300 I CONTROL  [initandlisten] allocator: tcmalloc
+2016-03-05T12:15:47.150-0300 I CONTROL  [initandlisten] modules: none
+2016-03-05T12:15:47.150-0300 I CONTROL  [initandlisten] build environment:
+2016-03-05T12:15:47.150-0300 I CONTROL  [initandlisten]     distmod: ubuntu1404
+2016-03-05T12:15:47.150-0300 I CONTROL  [initandlisten]     distarch: x86_64
+2016-03-05T12:15:47.150-0300 I CONTROL  [initandlisten]     target_arch: x86_64
+2016-03-05T12:15:47.150-0300 I CONTROL  [initandlisten] options: { net: { port: 27032 }, replication: { replSet: "replica_set" }, storage: { dbPath: "/data/rs3" } }
+2016-03-05T12:15:47.176-0300 I STORAGE  [initandlisten] wiredtiger_open config: create,cache_size=4G,session_max=20000,eviction=(threads_max=4),config_base=false,statistics=(fast),log=(enabled=true,archive=true,path=journal,compressor=snappy),file_manager=(close_idle_time=100000),checkpoint=(wait=60,log_size=2GB),statistics_log=(wait=0),
+2016-03-05T12:15:47.254-0300 I CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
+2016-03-05T12:15:47.254-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:15:47.254-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:15:47.254-0300 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/enabled is 'always'.
+2016-03-05T12:15:47.254-0300 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+2016-03-05T12:15:47.254-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:15:47.254-0300 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/defrag is 'always'.
+2016-03-05T12:15:47.254-0300 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+2016-03-05T12:15:47.254-0300 I CONTROL  [initandlisten] 
+2016-03-05T12:15:47.268-0300 I REPL     [initandlisten] Did not find local voted for document at startup;  NoMatchingDocument: Did not find replica set lastVote document in local.replset.election
+2016-03-05T12:15:47.268-0300 I REPL     [initandlisten] Did not find local replica set configuration document at startup;  NoMatchingDocument: Did not find replica set configuration document in local.system.replset
+2016-03-05T12:15:47.268-0300 I FTDC     [initandlisten] Initializing full-time diagnostic data capture with directory '/data/rs3/diagnostic.data'
+2016-03-05T12:15:47.268-0300 I NETWORK  [HostnameCanonicalizationWorker] Starting hostname canonicalization worker
+2016-03-05T12:15:47.289-0300 I NETWORK  [initandlisten] waiting for connections on port 27032
+
+```
+
+### **Config**
+```
+lucas@lucas-pc:~$ mongo --port 27030
+
+ var rsconf = {
+      _id: "replica_set",
+      members: [
+          {
+              _id: 0,
+              host: "127.0.0.1:27030"
+          }
+      ]
+  }
+lucas-pc:27030(mongod-3.2.3) test> rs.initiate(rsconf)
+{
+  "ok": 1
+}
+
+lucas-pc:27030(mongod-3.2.3)[SECONDARY:replica_set] test> rs.add("127.0.0.1:27031")
+{
+  "ok": 1
+}
+lucas-pc:27030(mongod-3.2.3)[PRIMARY:replica_set] test> rs.add("127.0.0.1:27032")
+{
+  "ok": 1
+}
+
+```
