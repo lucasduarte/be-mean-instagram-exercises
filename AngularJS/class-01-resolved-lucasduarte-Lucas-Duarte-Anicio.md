@@ -1,14 +1,14 @@
-# AngularJS 1.5.x - Aula 01 - ExercÌcio  
+# AngularJS 1.5.x - Aula 01 - Exerc√≠cio  
 **user:** [lucasduarte](https://github.com/lucasduarte)  
 **autor:** Lucas Duarte Anicio
 
 
-## 1 - Explique qual a definiÁ„o de MVC, MVVM e MVP. 
-MVC: Model - View - Controller - SeparaÁ„o de responsabilidades onde o controller manipula os dados que s„o representados na view que È o espelho do model.
+## 1 - Explique qual a defini√ß√£o de MVC, MVVM e MVP. 
+MVC: Model - View - Controller - Separa√ß√£o de responsabilidades onde o controller manipula os dados que s√£o representados na view que √© o espelho do model.
 MVVM: Model - View - View - Model
 MVP: Model - View - Presenter
 
-## 2 - Crie uma aplicaÁ„o com um nome e um form onde os dados colocados neles sejam mostrados logo abaixo, **formatados**.
+## 2 - Crie uma aplica√ß√£o com um nome e um form onde os dados colocados neles sejam mostrados logo abaixo, **formatados**.
 ```html
 <!doctype html>
 <html lang="en">
@@ -17,10 +17,10 @@ MVP: Model - View - Presenter
   <title>Be MEAN</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 </head>
-<!-- Iniciando minha aplicaÁ„o com ng-app -->
+<!-- Iniciando minha aplica√ß√£o com ng-app -->
 <body data-ng-app="BeMEAN">
   <div class="container">
-        
+         
     <div class="form-group">
         <label>Nome: </label>
         <input type="text" class="form-control" name="nome" data-ng-model="nome">
@@ -30,7 +30,7 @@ MVP: Model - View - Presenter
         <input type="text" class="form-control" name="CPF" data-ng-model="CPF">
     </div>
     <div class="form-group">
-        <label>EndereÁo: </label>
+        <label>Endere√ßo: </label>
         <input type="text" class="form-control" name="endereco" data-ng-model="endereco">
     </div>
     <div class="form-group">
